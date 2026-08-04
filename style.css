@@ -459,3 +459,13 @@ svg { width: 18px; height: 18px; flex-shrink: 0; }
   .stat-value { font-size: 18px; }
   .page-header { align-items: flex-start; flex-direction: column; }
 }
+/* Additional profile styles */
+.profile-head .avatar.lg {
+  cursor: default;
+}
+.detail-grid .detail-row .v {
+  word-break: break-word;
+}
+.card .state {
+  padding: 20px;
+}
