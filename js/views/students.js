@@ -5,7 +5,7 @@ import {
 } from "../utils.js";
 import { DataTable, setCrumbs, openModal, confirmDialog, toast, loadingState } from "../ui.js";
 import { subscribeStudents, createStudent, updateStudent, deleteStudent, getStudent } from "../data.js";
-import { renderStudentProfile } from "./student-profile.js"; // New import for Phase 2
+import { renderStudentProfile } from "./student-profile.js"; // <-- NEW IMPORT
 
 let unsub = null;
 
@@ -264,7 +264,7 @@ export function validateStudent(d) {
   return null;
 }
 
-// Updated profile page using the new renderer from student-profile.js
+// ---- UPDATED profilePage using new renderer ----
 function profilePage(id) {
   const page = el("div", { "data-profile-root": true, "data-testid": "student-profile" });
   renderStudentProfile(id, page);
