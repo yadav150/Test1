@@ -35,8 +35,6 @@ const state = {
     // Photo
     photoFile: null,
     photoPreview: null,
-    // Documents
-    documents: [], // array of { file, preview? } but we'll store files temporarily
     // Payment
     feeType: "",
     amount: 0,
@@ -46,7 +44,6 @@ const state = {
     paymentMonth: new Date().toISOString().slice(0, 7),
     paymentRemarks: ""
   },
-  // We'll keep uploaded documents in a separate array to avoid polluting data
   documentFiles: []
 };
 
@@ -75,7 +72,6 @@ export function renderAdmissionWizard(container) {
       style: `font-size:13px; font-weight:${isActive ? "600" : "400"}; color:${isActive ? "var(--text)" : "var(--muted)"};`
     }, [step.label]);
     const wrapper = el("div", { style: "display:flex; align-items:center; gap:6px;" }, [dot, label]);
-    // Click to navigate to completed steps, but not future ones
     if (index <= state.currentStep) {
       wrapper.style.cursor = "pointer";
       wrapper.onclick = () => goToStep(index);
@@ -99,18 +95,14 @@ export function renderAdmissionWizard(container) {
   nav.appendChild(nextBtn);
   container.appendChild(nav);
 
-  // Render current step
   function renderStep(stepIndex) {
     content.innerHTML = "";
-    const step = steps[stepIndex];
     const stepContent = getStepContent(stepIndex);
     content.appendChild(stepContent);
-    // Update buttons
     prevBtn.disabled = stepIndex === 0;
     nextBtn.textContent = stepIndex === steps.length - 1 ? "Submit Admission" : "Next";
   }
 
-  // Navigation
   prevBtn.onclick = () => {
     if (state.currentStep > 0) {
       state.currentStep--;
@@ -120,16 +112,12 @@ export function renderAdmissionWizard(container) {
   };
 
   nextBtn.onclick = async () => {
-    // Validate current step
     const valid = await validateStep(state.currentStep);
     if (!valid) return;
-
     if (state.currentStep === steps.length - 1) {
-      // Final submit
       await submitAdmission();
       return;
     }
-    // Go to next step
     state.currentStep++;
     renderStep(state.currentStep);
     updateProgress();
@@ -144,17 +132,6 @@ export function renderAdmissionWizard(container) {
   }
 
   function updateProgress() {
-    // Redraw progress bar to update colors
-    renderAdmissionWizard(container); // Simple approach: re-render whole wizard
-    // But we need to preserve state. We'll re-render from scratch
-    // However, to keep it simple, we can just re-run the whole function.
-    // But that would cause recursion. Let's just update the DOM of progress bar.
-    // For simplicity, we'll re-render the entire container.
-    // We'll re-run renderAdmissionWizard with a flag to avoid infinite loop.
-    // Better: we can just update progress bar manually.
-    // We'll implement a simpler update: we'll just update the progress bar elements.
-    // For brevity, we'll leave this and rely on the fact that we call renderStep which updates content and nav.
-    // But the progress bar dots won't update. Let's add a quick fix:
     const dots = container.querySelectorAll('[style*="border-radius:50%"]');
     if (dots.length) {
       dots.forEach((dot, i) => {
@@ -164,7 +141,6 @@ export function renderAdmissionWizard(container) {
         dot.style.color = isActive || isCompleted ? "#fff" : "var(--muted)";
       });
     }
-    // Update labels
     const labels = container.querySelectorAll('span[style*="font-weight"]');
     labels.forEach((label, i) => {
       const isActive = i === state.currentStep;
@@ -256,7 +232,7 @@ function educationalStep() {
     row.appendChild(inp);
     wrap.appendChild(row);
   });
-  // Add parents & contact fields (can be moved to step 1 but we'll add here for simplicity)
+  // Parents & Contact
   const parentFields = [
     { key: "fatherName", label: "Father's Name *", type: "text" },
     { key: "motherName", label: "Mother's Name", type: "text" },
@@ -316,7 +292,6 @@ function documentsStep() {
     }
     state.data.photoFile = file;
     state.data.photoPreview = URL.createObjectURL(file);
-    // Update avatar
     avatar.innerHTML = "";
     avatar.appendChild(el("img", { src: state.data.photoPreview }));
   };
@@ -329,20 +304,6 @@ function documentsStep() {
   const docSection = el("div");
   docSection.appendChild(el("div", { class: "form-section-title", text: "Supporting Documents" }));
   const docList = el("div", { style: "margin-bottom:12px;" });
-  if (state.documentFiles.length) {
-    state.documentFiles.forEach((doc, idx) => {
-      const row = el("div", { style: "display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border);" }, [
-        el("span", { text: doc.name }),
-        el("button", { class: "btn btn-sm btn-danger", onclick: () => {
-          state.documentFiles.splice(idx, 1);
-          renderDocList();
-        }, html: ICON.trash })
-      ]);
-      docList.appendChild(row);
-    });
-  } else {
-    docList.appendChild(el("div", { class: "state-sub", text: "No documents uploaded yet." }));
-  }
   function renderDocList() {
     docList.innerHTML = "";
     if (state.documentFiles.length) {
@@ -360,6 +321,7 @@ function documentsStep() {
       docList.appendChild(el("div", { class: "state-sub", text: "No documents uploaded yet." }));
     }
   }
+  renderDocList();
   docSection.appendChild(docList);
 
   const docUploadBtn = el("button", { class: "btn btn-outline btn-sm", text: "Upload Document" });
@@ -468,24 +430,22 @@ function reviewStep() {
 async function validateStep(stepIndex) {
   const data = state.data;
   switch (stepIndex) {
-    case 0: // Personal
+    case 0:
       if (!required(data.name)) { toast({ type: "error", title: "Validation", message: "Student Name is required." }); return false; }
       if (!required(data.gender)) { toast({ type: "error", title: "Validation", message: "Gender is required." }); return false; }
       if (!required(data.dob)) { toast({ type: "error", title: "Validation", message: "Date of Birth is required." }); return false; }
       return true;
-    case 1: // Educational + Parents
+    case 1:
       if (!required(data.class)) { toast({ type: "error", title: "Validation", message: "Class is required." }); return false; }
       if (!required(data.fatherName)) { toast({ type: "error", title: "Validation", message: "Father's name is required." }); return false; }
       if (!required(data.phone) || !isPhone(data.phone)) { toast({ type: "error", title: "Validation", message: "Valid phone number required." }); return false; }
       if (data.email && !isEmail(data.email)) { toast({ type: "error", title: "Validation", message: "Invalid email address." }); return false; }
       return true;
-    case 2: // Documents – optional
+    case 2:
       return true;
-    case 3: // Payment – optional (if payment required, check here)
-      // If payment is required, we could validate that feeType and amount are provided.
-      // For now, we treat it as optional.
+    case 3:
       return true;
-    case 4: // Review – final validation; we already validated each step.
+    case 4:
       return true;
     default:
       return true;
@@ -495,7 +455,6 @@ async function validateStep(stepIndex) {
 // ---------- Submit ----------
 async function submitAdmission() {
   const data = state.data;
-  // Final validation (all required fields)
   const studentPayload = {
     name: data.name,
     gender: data.gender,
@@ -520,11 +479,9 @@ async function submitAdmission() {
   const err = validateStudent(studentPayload);
   if (err) { toast({ type: "error", title: "Validation error", message: err }); return; }
 
-  // Show loading
-  const loading = toast({ type: "info", title: "Submitting admission...", message: "Please wait." });
+  toast({ type: "info", title: "Submitting admission...", message: "Please wait." });
 
   try {
-    // Create student
     const created = await createStudent(studentPayload, state.data.photoFile);
     const studentId = created.id;
 
@@ -535,7 +492,7 @@ async function submitAdmission() {
       }
     }
 
-    // Record payment if payment details provided
+    // Record payment if provided
     const hasPayment = data.feeType && data.amount > 0 && data.paidAmount > 0 && data.paymentMode;
     if (hasPayment) {
       const balance = Number(data.amount) - Number(data.paidAmount);
@@ -559,11 +516,9 @@ async function submitAdmission() {
     }
 
     toast({ type: "success", title: "Admission successful", message: `Admission #${created.admissionNumber}` });
-    // Reset form and show success, maybe redirect to profile
-    // For now, we can reload the page or show a reset button.
-    // We'll reset state and re-render wizard.
     resetState();
-    renderAdmissionWizard(document.querySelector('[data-testid="admission-view"]'));
+    const container = document.querySelector('[data-testid="admission-view"]');
+    if (container) renderAdmissionWizard(container);
   } catch (e) {
     console.error(e);
     toast({ type: "error", title: "Admission failed", message: e.message || "Please try again." });
