@@ -5,101 +5,10 @@ import {
 } from "../utils.js";
 import { DataTable, setCrumbs, openModal, confirmDialog, toast, loadingState } from "../ui.js";
 import { subscribeStudents, createStudent, updateStudent, deleteStudent, getStudent } from "../data.js";
-import { renderStudentProfile } from "./student-profile.js";
+import { renderStudentProfile } from "./student-profile.js"; // <-- NEW IMPORT
 
 let unsub = null;
 
-// ---------- Admin Security Helpers ----------
-const EDIT_PASSWORD = "Yadav123";
-
-function promptEditPassword() {
-  return new Promise((resolve) => {
-    const body = el("div", { style: "text-align:center; padding:8px 4px;" }, [
-      el("div", { style: "font-weight:700; font-size:15px; margin-bottom:8px;", text: "Admin Authorization Required" }),
-      el("div", { style: "color:var(--muted); font-size:13.5px; margin-bottom:12px;", text: "Enter the edit authorization password to unlock the form." }),
-      el("input", { type: "password", class: "input", style: "width:100%; max-width:240px; margin:0 auto;", placeholder: "Enter password", "data-testid": "edit-password-input" })
-    ]);
-    const cancelBtn = el("button", { class: "btn btn-outline", text: "Cancel" });
-    const okBtn = el("button", { class: "btn btn-primary", text: "Unlock" });
-    const m = openModal({ title: "", body, footer: [cancelBtn, okBtn] });
-    const input = body.querySelector("input");
-    let errorMsg = null;
-
-    function attempt() {
-      if (input.value === EDIT_PASSWORD) {
-        m.close();
-        resolve(true);
-      } else {
-        if (!errorMsg) {
-          errorMsg = el("div", { style: "color:var(--danger); font-size:13px; margin-top:8px;", text: "Incorrect password. Please try again." });
-          body.appendChild(errorMsg);
-        } else {
-          errorMsg.textContent = "Incorrect password. Please try again.";
-        }
-        input.value = "";
-        input.focus();
-      }
-    }
-
-    cancelBtn.onclick = () => { m.close(); resolve(false); };
-    okBtn.onclick = attempt;
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") attempt(); });
-    // Auto-focus
-    setTimeout(() => input.focus(), 100);
-  });
-}
-
-function promptCaptcha() {
-  return new Promise((resolve) => {
-    // Generate 6-character alphanumeric CAPTCHA
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let captcha = "";
-    for (let i = 0; i < 6; i++) {
-      captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    const body = el("div", { style: "text-align:center; padding:8px 4px;" }, [
-      el("div", { style: "font-weight:700; font-size:15px; margin-bottom:8px;", text: "Security Verification" }),
-      el("div", { style: "color:var(--muted); font-size:13.5px; margin-bottom:12px;", text: "Please enter the CAPTCHA shown below to confirm your changes." }),
-      el("div", { style: "background:var(--bg); padding:12px; font-size:24px; font-weight:700; letter-spacing:4px; border-radius:8px; margin-bottom:12px;", text: captcha }),
-      el("input", { type: "text", class: "input", style: "width:100%; max-width:180px; margin:0 auto;", placeholder: "Enter CAPTCHA", "data-testid": "captcha-input" })
-    ]);
-    const cancelBtn = el("button", { class: "btn btn-outline", text: "Cancel" });
-    const okBtn = el("button", { class: "btn btn-primary", text: "Verify" });
-    const m = openModal({ title: "", body, footer: [cancelBtn, okBtn] });
-    const input = body.querySelector("input");
-    let errorMsg = null;
-
-    function attempt() {
-      if (input.value.toUpperCase() === captcha) {
-        m.close();
-        resolve(true);
-      } else {
-        if (!errorMsg) {
-          errorMsg = el("div", { style: "color:var(--danger); font-size:13px; margin-top:8px;", text: "Incorrect CAPTCHA. Try again." });
-          body.appendChild(errorMsg);
-        } else {
-          errorMsg.textContent = "Incorrect CAPTCHA. Try again.";
-        }
-        // Regenerate CAPTCHA for security
-        captcha = "";
-        for (let i = 0; i < 6; i++) {
-          captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        const display = body.querySelector("div[style*='background:var(--bg)']");
-        if (display) display.textContent = captcha;
-        input.value = "";
-        input.focus();
-      }
-    }
-
-    cancelBtn.onclick = () => { m.close(); resolve(false); };
-    okBtn.onclick = attempt;
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") attempt(); });
-    setTimeout(() => input.focus(), 100);
-  });
-}
-
-// ---------- Main View ----------
 export function StudentsView({ id } = {}) {
   setCrumbs(id ? [{ label: "Students", href: "#/students" }, { label: "Profile" }] : [{ label: "Students" }]);
   const page = el("div", { "data-testid": "students-view" });
@@ -225,23 +134,7 @@ function rowActions(items) {
   return wrap;
 }
 
-// ---------- Open Student Form (with Security) ----------
 export function openStudentForm({ mode = "create", record = {}, onCreated } = {}) {
-  // For edit mode, require password first
-  if (mode === "edit") {
-    promptEditPassword().then(ok => {
-      if (!ok) return; // user cancelled or wrong password
-      // proceed to open form
-      openStudentFormInternal({ mode, record, onCreated });
-    });
-    return;
-  }
-  // Create mode: no password needed
-  openStudentFormInternal({ mode, record, onCreated });
-}
-
-// Internal function – actual form opening logic
-function openStudentFormInternal({ mode = "create", record = {}, onCreated } = {}) {
   const body = el("div");
   const form = studentFormFields(record);
   body.appendChild(form.node);
@@ -250,14 +143,7 @@ function openStudentFormInternal({ mode = "create", record = {}, onCreated } = {
   const cancelBtn = el("button", { class: "btn btn-outline", text: "Cancel" });
   const m = openModal({ title: mode === "create" ? "Add Student" : "Edit Student", body, footer: [cancelBtn, saveBtn], size: "large" });
   cancelBtn.onclick = () => m.close();
-
   saveBtn.onclick = async () => {
-    // Show CAPTCHA before saving (only for edit mode)
-    if (mode === "edit") {
-      const captchaOk = await promptCaptcha();
-      if (!captchaOk) return; // user cancelled or wrong
-    }
-
     const data = form.getValue();
     const err = validateStudent(data);
     if (err) { toast({ type: "error", title: "Validation error", message: err }); return; }
@@ -280,7 +166,6 @@ function openStudentFormInternal({ mode = "create", record = {}, onCreated } = {
   };
 }
 
-// ---------- Student Form Fields ----------
 export function studentFormFields(record = {}) {
   let photoFile = null;
   const photoInput = el("input", { type: "file", accept: "image/*", style: "display:none;", "data-testid": "photo-input" });
@@ -368,7 +253,6 @@ export function studentFormFields(record = {}) {
   };
 }
 
-// ---------- Validation ----------
 export function validateStudent(d) {
   if (!required(d.name)) return "Student Name is required";
   if (!required(d.gender)) return "Gender is required";
@@ -380,7 +264,7 @@ export function validateStudent(d) {
   return null;
 }
 
-// ---------- Profile Page ----------
+// ---- UPDATED profilePage using new renderer ----
 function profilePage(id) {
   const page = el("div", { "data-profile-root": true, "data-testid": "student-profile" });
   renderStudentProfile(id, page);
