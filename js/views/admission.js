@@ -1,4 +1,5 @@
 // Admission view — now uses the multi-step wizard
+import { el } from "../utils.js";
 import { setCrumbs } from "../ui.js";
 import { renderAdmissionWizard } from "./admission-wizard.js";
 
