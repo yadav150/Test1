@@ -44,12 +44,14 @@ function promptEditPassword() {
     cancelBtn.onclick = () => { m.close(); resolve(false); };
     okBtn.onclick = attempt;
     input.addEventListener("keydown", (e) => { if (e.key === "Enter") attempt(); });
+    // Auto-focus
     setTimeout(() => input.focus(), 100);
   });
 }
 
 function promptCaptcha() {
   return new Promise((resolve) => {
+    // Generate 6-character alphanumeric CAPTCHA
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let captcha = "";
     for (let i = 0; i < 6; i++) {
@@ -78,7 +80,7 @@ function promptCaptcha() {
         } else {
           errorMsg.textContent = "Incorrect CAPTCHA. Try again.";
         }
-        // Regenerate CAPTCHA
+        // Regenerate CAPTCHA for security
         captcha = "";
         for (let i = 0; i < 6; i++) {
           captcha += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -124,6 +126,9 @@ export function StudentsView({ id } = {}) {
   listMount.appendChild(loadingState("Loading students…"));
 
   let rows = [];
+  let filterClass = "";
+  let filterSection = "";
+  let filterStatus = "";
   let table = null;
 
   const classSel = el("select", { class: "select", "data-testid": "filter-class" }, [
@@ -220,20 +225,23 @@ function rowActions(items) {
   return wrap;
 }
 
-// ---------- Student Form (Create / Edit) ----------
+// ---------- Open Student Form (with Security) ----------
 export function openStudentForm({ mode = "create", record = {}, onCreated } = {}) {
+  // For edit mode, require password first
   if (mode === "edit") {
     promptEditPassword().then(ok => {
-      if (!ok) return;
-      openStudentFormInternal({ mode, record, onCreated, skipCaptcha: false });
+      if (!ok) return; // user cancelled or wrong password
+      // proceed to open form
+      openStudentFormInternal({ mode, record, onCreated });
     });
     return;
   }
-  // Create mode: skip password and CAPTCHA
-  openStudentFormInternal({ mode, record, onCreated, skipCaptcha: true });
+  // Create mode: no password needed
+  openStudentFormInternal({ mode, record, onCreated });
 }
 
-function openStudentFormInternal({ mode = "create", record = {}, onCreated = null, skipCaptcha = false } = {}) {
+// Internal function – actual form opening logic
+function openStudentFormInternal({ mode = "create", record = {}, onCreated } = {}) {
   const body = el("div");
   const form = studentFormFields(record);
   body.appendChild(form.node);
@@ -244,10 +252,10 @@ function openStudentFormInternal({ mode = "create", record = {}, onCreated = nul
   cancelBtn.onclick = () => m.close();
 
   saveBtn.onclick = async () => {
-    // Show CAPTCHA only for edit mode and if not skipped
-    if (mode === "edit" && !skipCaptcha) {
+    // Show CAPTCHA before saving (only for edit mode)
+    if (mode === "edit") {
       const captchaOk = await promptCaptcha();
-      if (!captchaOk) return;
+      if (!captchaOk) return; // user cancelled or wrong
     }
 
     const data = form.getValue();
@@ -258,7 +266,7 @@ function openStudentFormInternal({ mode = "create", record = {}, onCreated = nul
       if (mode === "create") {
         const created = await createStudent(data, form.getPhoto());
         toast({ type: "success", title: "Student added", message: `Admission #${created.admissionNumber}` });
-        if (onCreated) onCreated(created);
+        onCreated && onCreated(created);
       } else {
         await updateStudent(record.id, { ...data, photoUrl: record.photoUrl || null }, form.getPhoto());
         toast({ type: "success", title: "Student updated" });
@@ -272,6 +280,7 @@ function openStudentFormInternal({ mode = "create", record = {}, onCreated = nul
   };
 }
 
+// ---------- Student Form Fields ----------
 export function studentFormFields(record = {}) {
   let photoFile = null;
   const photoInput = el("input", { type: "file", accept: "image/*", style: "display:none;", "data-testid": "photo-input" });
@@ -359,6 +368,7 @@ export function studentFormFields(record = {}) {
   };
 }
 
+// ---------- Validation ----------
 export function validateStudent(d) {
   if (!required(d.name)) return "Student Name is required";
   if (!required(d.gender)) return "Gender is required";
