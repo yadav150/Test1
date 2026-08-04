@@ -1,11 +1,27 @@
 // Firebase initialization using Realtime Database
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getDatabase, ref as dbRef, push, set, update, remove, get, child,
-  onValue, query, orderByChild, runTransaction, serverTimestamp
+  getDatabase,
+  ref as dbRef,
+  push,
+  set,
+  update,
+  remove,
+  get,
+  child,
+  onValue,
+  query,
+  orderByChild,
+  runTransaction,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
 import {
-  getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject
+  getStorage,
+  ref as sRef,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
 const firebaseConfig = {
@@ -43,6 +59,7 @@ export {
 };
 
 const NS = "erp_bfa";
+
 export const PATH = {
   students: `${NS}/students`,
   teachers: `${NS}/teachers`,
@@ -53,17 +70,23 @@ export const PATH = {
 
 export async function nextCounter(name, prefix, pad = 4) {
   const cRef = dbRef(db, `${PATH.counters}/${name}`);
-  const result = await runTransaction(cRef, (current) => (Number(current) || 0) + 1);
+  const result = await runTransaction(
+    cRef,
+    (current) => (Number(current) || 0) + 1
+  );
   const value = result.snapshot.val();
   return `${prefix}${String(value).padStart(pad, "0")}`;
 }
 
 export async function uploadPhoto(kind, id, file) {
   if (!file) return null;
+
   try {
     const path = `${NS}/${kind}/${id}/${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
     const r = sRef(storage, path);
+
     await uploadBytes(r, file);
+
     return await getDownloadURL(r);
   } catch (e) {
     console.warn("Photo upload failed; falling back to base64", e?.message);
@@ -74,10 +97,32 @@ export async function uploadPhoto(kind, id, file) {
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
     const fr = new FileReader();
+
     fr.onload = () => resolve(fr.result);
     fr.onerror = reject;
+
     fr.readAsDataURL(file);
   });
+}
+
+// Delete a file from Firebase Storage using its download URL
+export async function deleteFile(url) {
+  if (!url) return;
+
+  try {
+    const decodedUrl = decodeURIComponent(url);
+    const match = decodedUrl.match(/\/o\/(.+?)\?/);
+
+    if (!match) return;
+
+    const path = match[1];
+    const fileRef = sRef(storage, path);
+
+    await deleteObject(fileRef);
+  } catch (e) {
+    console.warn("Failed to delete file:", e.message);
+    // Silently fail – the file may already be gone
+  }
 }
 
 export async function firebaseHealthCheck() {
