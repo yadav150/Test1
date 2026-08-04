@@ -4,7 +4,11 @@ import { openModal, toast, confirmDialog, loadingState } from "../ui.js";
 import { getStudent, updateStudent, addStudentDocument, removeStudentDocument, updateStudentPhoto } from "../data.js";
 import { studentFormFields, validateStudent } from "./students.js";
 
-// Main profile renderer
+/**
+ * Main profile renderer – displays all student information in organized sections
+ * @param {string} id - Student ID
+ * @param {HTMLElement} container - Container element to render into
+ */
 export function renderStudentProfile(id, container) {
   container.innerHTML = "";
   container.appendChild(loadingState("Loading student…"));
@@ -36,65 +40,98 @@ export function renderStudentProfile(id, container) {
     ]);
     container.appendChild(header);
 
-    // ---- Sections ----
-    const sections = [
-      { title: "Personal Information", fields: ["name", "gender", "dob", "bloodGroup", "religion", "category"] },
-      { title: "Academic Details", fields: ["class", "section", "rollNumber", "admissionDate", "previousSchool"] },
-      { title: "Parents & Guardian", fields: ["fatherName", "motherName", "guardian"] },
-      { title: "Contact & Address", fields: ["phone", "emergencyContact", "email", "address"] },
-      { title: "Documents", fields: [] } // handled separately
-    ];
+    // ---- Personal Information ----
+    container.appendChild(sectionCard("Personal Information", [
+      ["Full Name", student.name],
+      ["Gender", student.gender],
+      ["Date of Birth", fmtDate(student.dob)],
+      ["Age", ageFromDob(student.dob)],
+      ["Blood Group", student.bloodGroup || "—"],
+      ["Religion", student.religion || "—"],
+      ["Category", student.category || "—"]
+    ]));
 
-    sections.forEach(sec => {
-      if (sec.title === "Documents") {
-        container.appendChild(documentsSection(student));
-        return;
-      }
-      const card = el("div", { class: "card", style: "margin-bottom:16px;" });
-      card.appendChild(el("div", { class: "card-header" }, [el("div", { class: "card-title", text: sec.title })]));
-      const body = el("div", { class: "card-body" });
-      const grid = el("div", { class: "detail-grid" });
-      sec.fields.forEach(key => {
-        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-        let value = student[key];
-        if (key === "dob") value = fmtDate(value);
-        else if (key === "admissionDate") value = fmtDate(value);
-        else if (key === "bloodGroup" && !value) value = "—";
-        grid.appendChild(el("div", { class: "detail-row" }, [
-          el("div", { class: "k", text: label }),
-          el("div", { class: "v", text: value || "—" })
-        ]));
-      });
-      body.appendChild(grid);
-      card.appendChild(body);
-      container.appendChild(card);
-    });
+    // ---- Academic Details ----
+    container.appendChild(sectionCard("Academic Details", [
+      ["Class", student.class || "—"],
+      ["Section", student.section || "—"],
+      ["Roll Number", student.rollNumber || "—"],
+      ["Admission Date", fmtDate(student.admissionDate)],
+      ["Previous School", student.previousSchool || "—"],
+      ["Admission ID", student.admissionId || "—"],
+      ["Admission Number", student.admissionNumber || "—"],
+      ["Status", student.status || "Active"]
+    ]));
 
-    // Add status and other info if not covered
-    // Already displayed in header chips.
+    // ---- Parents & Guardian ----
+    container.appendChild(sectionCard("Parents & Guardian", [
+      ["Father's Name", student.fatherName || "—"],
+      ["Mother's Name", student.motherName || "—"],
+      ["Guardian", student.guardian || "—"]
+    ]));
+
+    // ---- Contact & Address ----
+    container.appendChild(sectionCard("Contact & Address", [
+      ["Phone", student.phone || "—"],
+      ["Emergency Contact", student.emergencyContact || "—"],
+      ["Email", student.email || "—"],
+      ["Address", student.address || "—"]
+    ]));
+
+    // ---- Documents Section ----
+    container.appendChild(documentsSection(student));
   });
 }
 
-// Photo section with upload capability
+/**
+ * Create a section card with key-value pairs
+ * @param {string} title - Section title
+ * @param {Array<[string, string]>} pairs - Array of [label, value] pairs
+ * @returns {HTMLElement} Card element
+ */
+function sectionCard(title, pairs) {
+  const card = el("div", { class: "card", style: "margin-bottom:16px;" });
+  card.appendChild(el("div", { class: "card-header" }, [el("div", { class: "card-title", text: title })]));
+  const body = el("div", { class: "card-body" });
+  const grid = el("div", { class: "detail-grid" });
+  pairs.forEach(([label, value]) => {
+    grid.appendChild(el("div", { class: "detail-row" }, [
+      el("div", { class: "k", text: label }),
+      el("div", { class: "v", text: value })
+    ]));
+  });
+  body.appendChild(grid);
+  card.appendChild(body);
+  return card;
+}
+
+/**
+ * Photo section with upload capability
+ * @param {Object} student - Student data object
+ * @returns {HTMLElement} Photo section element
+ */
 function photoSection(student) {
   const wrap = el("div", { style: "display:flex;flex-direction:column;align-items:center;gap:8px;" });
   const avatar = el("div", { class: "avatar lg" });
-  if (student.photoUrl) avatar.appendChild(el("img", { src: student.photoUrl }));
+  if (student.photoUrl) avatar.appendChild(el("img", { src: student.photoUrl, alt: student.name }));
   else avatar.textContent = initials(student.name);
   wrap.appendChild(avatar);
 
   const uploadBtn = el("button", { class: "btn btn-outline btn-sm", text: "Update Photo" });
   const fileInput = el("input", { type: "file", accept: "image/*", style: "display:none;" });
   uploadBtn.onclick = () => fileInput.click();
+
   fileInput.onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
       toast({ type: "error", title: "File too large", message: "Max 5MB" });
+      fileInput.value = "";
       return;
     }
     if (!file.type.startsWith("image/")) {
       toast({ type: "error", title: "Invalid file type", message: "Please upload an image." });
+      fileInput.value = "";
       return;
     }
     uploadBtn.disabled = true;
@@ -103,13 +140,17 @@ function photoSection(student) {
       const newUrl = await updateStudentPhoto(student.id, file);
       // Update avatar
       avatar.innerHTML = "";
-      avatar.appendChild(el("img", { src: newUrl }));
+      avatar.appendChild(el("img", { src: newUrl, alt: student.name }));
       toast({ type: "success", title: "Photo updated" });
+      // Re-render to reflect changes
+      const container = wrap.closest('[data-profile-root]');
+      if (container) renderStudentProfile(student.id, container);
     } catch (err) {
       toast({ type: "error", title: "Upload failed", message: err.message });
     } finally {
       uploadBtn.disabled = false;
       uploadBtn.textContent = "Update Photo";
+      fileInput.value = "";
     }
   };
   wrap.appendChild(uploadBtn);
@@ -117,7 +158,11 @@ function photoSection(student) {
   return wrap;
 }
 
-// Documents section
+/**
+ * Documents section with upload, preview, download, and delete
+ * @param {Object} student - Student data object
+ * @returns {HTMLElement} Documents section element
+ */
 function documentsSection(student) {
   const wrap = el("div", { class: "card", style: "margin-bottom:16px;" });
   wrap.appendChild(el("div", { class: "card-header" }, [
@@ -127,23 +172,25 @@ function documentsSection(student) {
   const body = el("div", { class: "card-body" });
   const docs = student.documents || [];
   if (!docs.length) {
-    body.appendChild(el("div", { class: "state", style: "padding:20px;", sub: "No documents uploaded." }));
+    body.appendChild(el("div", { class: "state", style: "padding:20px;" }, [
+      el("div", { html: ICON.inbox }),
+      el("div", { class: "state-sub", text: "No documents uploaded." })
+    ]));
   } else {
     const list = el("div", { style: "display:flex;flex-direction:column;gap:8px;" });
     docs.forEach(doc => {
       const row = el("div", { style: "display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--border);" }, [
-        el("div", {}, [
+        el("div", { style: "flex:1;min-width:0;" }, [
           el("div", { style: "font-weight:600;", text: doc.name }),
           el("div", { style: "font-size:12px;color:var(--muted);", text: `${(doc.size/1024).toFixed(1)} KB · ${new Date(doc.uploadedAt).toLocaleDateString()}` })
         ]),
-        el("div", { style: "display:flex;gap:6px;" }, [
+        el("div", { style: "display:flex;gap:6px;flex-shrink:0;" }, [
           el("a", { href: doc.url, target: "_blank", class: "btn btn-sm btn-outline", text: "Preview" }),
           el("a", { href: doc.url, download: doc.name, class: "btn btn-sm btn-outline", html: ICON.download }),
           el("button", { class: "btn btn-sm btn-danger", onclick: async () => {
             if (await confirmDialog({ title: "Delete document?", message: `Are you sure you want to delete "${doc.name}"?` })) {
               await removeStudentDocument(student.id, doc.id);
               toast({ type: "success", title: "Document deleted" });
-              // Re-render the profile
               const container = wrap.closest('[data-profile-root]');
               if (container) renderStudentProfile(student.id, container);
             }
@@ -158,7 +205,10 @@ function documentsSection(student) {
   return wrap;
 }
 
-// Open document upload modal
+/**
+ * Open document upload modal
+ * @param {string} studentId - Student ID
+ */
 function openDocumentUpload(studentId) {
   const body = el("div", { style: "padding:12px;" });
   const fileInput = el("input", { type: "file", multiple: false, style: "width:100%;padding:8px;" });
@@ -169,20 +219,36 @@ function openDocumentUpload(studentId) {
   const cancel = el("button", { class: "btn btn-outline", text: "Cancel" });
   const upload = el("button", { class: "btn btn-primary", text: "Upload" });
   const m = openModal({ title: "Upload Document", body, footer: [cancel, upload] });
+
   cancel.onclick = () => m.close();
+
   upload.onclick = async () => {
     const file = fileInput.files[0];
-    if (!file) { toast({ type: "error", title: "No file selected" }); return; }
-    if (file.size > 10 * 1024 * 1024) { toast({ type: "error", title: "File too large", message: "Max 10MB" }); return; }
-    const allowed = ["application/pdf", "image/jpeg", "image/png", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-    if (!allowed.includes(file.type)) { toast({ type: "error", title: "Invalid file type" }); return; }
+    if (!file) {
+      toast({ type: "error", title: "No file selected" });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ type: "error", title: "File too large", message: "Max 10MB" });
+      return;
+    }
+    const allowed = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    if (!allowed.includes(file.type)) {
+      toast({ type: "error", title: "Invalid file type", message: "PDF, DOC, DOCX, JPG, PNG only." });
+      return;
+    }
     upload.disabled = true;
     upload.textContent = "Uploading…";
     try {
       await addStudentDocument(studentId, file);
       toast({ type: "success", title: "Document uploaded" });
       m.close();
-      // Re-render profile
       const profileContainer = document.querySelector('[data-profile-root]');
       if (profileContainer) renderStudentProfile(studentId, profileContainer);
     } catch (err) {
@@ -193,32 +259,34 @@ function openDocumentUpload(studentId) {
   };
 }
 
-// Edit profile modal (full form)
+/**
+ * Open edit profile modal – reuses the existing studentFormFields
+ * @param {Object} student - Student data object
+ */
 export function openStudentProfileEdit(student) {
   const body = el("div");
-  const form = studentFormFields(student); // reuse basic form
+  const form = studentFormFields(student);
   body.appendChild(form.node);
-
-  // Additional fields? The basic form already covers all fields.
-  // We'll add a note about documents being managed separately.
 
   const saveBtn = el("button", { class: "btn btn-primary", "data-testid": "save-profile-btn", text: "Save Changes" });
   const cancelBtn = el("button", { class: "btn btn-outline", text: "Cancel" });
   const m = openModal({ title: "Edit Student Profile", body, footer: [cancelBtn, saveBtn], size: "large" });
 
   cancelBtn.onclick = () => m.close();
+
   saveBtn.onclick = async () => {
     const data = form.getValue();
     const err = validateStudent(data);
-    if (err) { toast({ type: "error", title: "Validation error", message: err }); return; }
+    if (err) {
+      toast({ type: "error", title: "Validation error", message: err });
+      return;
+    }
     saveBtn.disabled = true;
     saveBtn.textContent = "Saving…";
     try {
-      // Preserve photo and documents
-      await updateStudent(student.id, { ...data, photoUrl: student.photoUrl }, form.getPhoto());
+      await updateStudent(student.id, { ...data, photoUrl: student.photoUrl || null }, form.getPhoto());
       toast({ type: "success", title: "Profile updated" });
       m.close();
-      // Re-render profile
       const container = document.querySelector('[data-profile-root]');
       if (container) renderStudentProfile(student.id, container);
     } catch (e) {
