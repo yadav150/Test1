@@ -2,1091 +2,440 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="description"
-        content="Dynamic prize wheel and personalized certificate experience"
-    >
-
-    <title>Certificate Reward Experience</title>
+    <title>Certificate Rewards</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="app">
+    <main class="app">
 
-        <!-- ========================================================
-             HEADER
-        ========================================================= -->
+        <!-- WELCOME -->
+        <section class="screen active" id="welcomeScreen">
+            <div class="card welcome-card">
+                <div class="brand">Certificate Rewards</div>
 
-        <header class="topbar">
+                <div class="welcome-content">
+                    <p class="eyebrow">PROFESSIONAL REWARD PROGRAM</p>
 
-            <div class="brand">
+                    <h1>Discover Your Reward</h1>
 
-                <div class="brand-mark">
-                    C
-                </div>
-
-                <div class="brand-copy">
-
-                    <strong>
-                        Certificate Rewards
-                    </strong>
-
-                    <span>
-                        Professional Achievement Experience
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="top-status">
-                Dynamic Experience
-            </div>
-
-        </header>
-
-
-        <main>
-
-            <!-- =====================================================
-                 SCREEN 1: WELCOME
-            ====================================================== -->
-
-            <section
-                id="welcomeScreen"
-                class="screen active"
-            >
-
-                <div class="welcome-card">
-
-                    <div class="eyebrow">
-                        SPECIAL REWARD EXPERIENCE
-                    </div>
-
-                    <h1>
-                        Spin. Discover.
-                        <span>Celebrate.</span>
-                    </h1>
-
-                    <p class="welcome-description">
-                        Take a spin and discover the professional
-                        coding-related reward selected for this round.
-                        Every spin receives a reward.
+                    <p class="description">
+                        Spin the reward wheel and discover the professional
+                        certificate or learning reward prepared for you.
                     </p>
 
-                    <div class="welcome-features">
+                    <p class="encouragement" id="welcomeEncouragement">
+                        Your opportunity is ready.
+                    </p>
 
-                        <div class="feature-card">
-                            <div class="feature-icon">01</div>
+                    <button class="primary-button" id="startButton">
+                        Start
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                            <div>
-                                <strong>Dynamic Spin</strong>
 
-                                <span>
-                                    Smooth timing and changing outcomes
-                                </span>
-                            </div>
+        <!-- SPINNER -->
+        <section class="screen" id="spinnerScreen">
+            <div class="card spinner-card">
+
+                <div class="top-section">
+                    <p class="eyebrow">REWARD ROUND</p>
+
+                    <div class="round-number" id="roundNumber">
+                        Round 01
+                    </div>
+
+                    <h1 id="spinMessageTitle">
+                        Spin the Wheel
+                    </h1>
+
+                    <p class="description" id="spinMessage">
+                        Your professional reward is waiting.
+                    </p>
+
+                    <p class="small-text" id="spinSubtitle">
+                        Every result includes a meaningful reward.
+                    </p>
+                </div>
+
+                <div class="wheel-wrapper">
+
+                    <div class="wheel-pointer"></div>
+
+                    <div class="wheel-area" id="wheelArea">
+                        <div class="wheel" id="wheel"></div>
+                        <div class="wheel-labels" id="wheelLabels"></div>
+
+                        <div class="wheel-center">
+                            <span>SPIN</span>
                         </div>
+                    </div>
 
-                        <div class="feature-card">
-                            <div class="feature-icon">02</div>
+                </div>
 
-                            <div>
-                                <strong>Instant Reveal</strong>
+                <button class="primary-button spin-button" id="spinButton">
+                    Spin Now
+                </button>
 
-                                <span>
-                                    Your reward appears after the wheel stops
-                                </span>
-                            </div>
-                        </div>
+            </div>
+        </section>
 
-                        <div class="feature-card">
-                            <div class="feature-icon">03</div>
 
-                            <div>
-                                <strong>Personalized Result</strong>
+        <!-- RESULT -->
+        <section class="screen" id="resultScreen">
+            <div class="card result-card">
 
-                                <span>
-                                    Eligible certificate rewards can be claimed
-                                </span>
-                            </div>
-                        </div>
+                <div class="result-icon" id="resultIcon"></div>
 
+                <p class="eyebrow" id="resultKicker">
+                    RESULT REVEALED
+                </p>
+
+                <div class="result-badge" id="resultBadge">
+                    Reward
+                </div>
+
+                <h1 id="resultTitle">
+                    Your Reward
+                </h1>
+
+                <p class="description" id="resultDescription"></p>
+
+                <div class="prize-box">
+                    <h2 id="resultPrize"></h2>
+                    <p id="resultPrizeSub"></p>
+                </div>
+
+                <button class="primary-button" id="claimButton">
+                    Claim Certificate
+                </button>
+
+                <button class="secondary-button" id="spinAgainButton">
+                    Spin Again
+                </button>
+
+                <p class="result-tip" id="resultTip"></p>
+
+            </div>
+
+            <div class="confetti-container" id="confettiContainer"></div>
+        </section>
+
+
+        <!-- CLAIM -->
+        <section class="screen" id="claimScreen">
+            <div class="card form-card">
+
+                <p class="eyebrow">CERTIFICATE CLAIM</p>
+
+                <h1>Enter Your Details</h1>
+
+                <p class="description">
+                    Complete the information below to prepare your certificate.
+                </p>
+
+                <div class="claim-summary">
+                    <span>Selected Reward</span>
+                    <strong id="claimPrizeName"></strong>
+                </div>
+
+                <div class="claim-summary">
+                    <span>Issuing Program</span>
+                    <strong id="claimInstitute"></strong>
+                </div>
+
+                <form id="claimForm" novalidate>
+
+                    <div class="field">
+                        <label for="fullName">Name</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            autocomplete="name"
+                            required
+                        >
+                        <small class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="fatherName">Father's Name</label>
+                        <input
+                            type="text"
+                            id="fatherName"
+                            autocomplete="off"
+                            required
+                        >
+                        <small class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="mobile">Mobile Number</label>
+                        <input
+                            type="tel"
+                            id="mobile"
+                            inputmode="numeric"
+                            autocomplete="tel"
+                            required
+                        >
+                        <small class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            autocomplete="email"
+                            required
+                        >
+                        <small class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="graduation">Graduation</label>
+                        <input
+                            type="text"
+                            id="graduation"
+                            placeholder="Example: B.A., B.Com, B.Tech"
+                            required
+                        >
+                        <small class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="address">Address</label>
+                        <textarea
+                            id="address"
+                            rows="4"
+                            autocomplete="street-address"
+                            required
+                        ></textarea>
+                        <small class="error-message"></small>
                     </div>
 
                     <button
-                        id="startButton"
-                        class="primary-button large"
-                        type="button"
+                        type="submit"
+                        class="primary-button"
+                        id="submitClaimButton"
                     >
-                        <span>Start the Experience</span>
-
-                        <svg
-                            width="19"
-                            height="19"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            aria-hidden="true"
-                        >
-                            <path
-                                d="M5 12H19"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                            />
-
-                            <path
-                                d="M13 6L19 12L13 18"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
+                        Generate Certificate
                     </button>
 
-                    <div class="encouragement-line">
-                        <span class="encouragement-dot"></span>
+                </form>
 
-                        <span id="welcomeEncouragement">
-                            Your next achievement could be one spin away.
-                        </span>
+            </div>
+        </section>
+
+
+        <!-- GENERATION -->
+        <section class="screen" id="generationScreen">
+            <div class="card generation-card">
+
+                <p class="eyebrow">CERTIFICATE REWARDS</p>
+
+                <h1>Preparing Your Certificate</h1>
+
+                <p class="description">
+                    Your certificate is being created.
+                </p>
+
+                <div class="progress-area">
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-bar"
+                            id="generationBar"
+                        ></div>
+                    </div>
+
+                    <div class="progress-percent" id="generationPercent">
+                        0%
                     </div>
 
                 </div>
 
-            </section>
+                <p class="generation-message" id="generationMessage">
+                    Preparing certificate information...
+                </p>
+
+                <p
+                    class="generation-encouragement"
+                    id="generationEncouragement"
+                >
+                    Please wait while the final certificate is prepared.
+                </p>
+
+            </div>
+        </section>
 
 
-            <!-- =====================================================
-                 SCREEN 2: SPINNER
-            ====================================================== -->
+        <!-- CERTIFICATE -->
+        <section class="screen certificate-screen" id="certificateScreen">
 
-            <section
-                id="spinnerScreen"
-                class="screen"
-            >
+            <div class="certificate-actions">
 
-                <div class="spinner-header">
+                <button
+                    class="secondary-button"
+                    id="backToResultButton"
+                >
+                    Back
+                </button>
 
-                    <div>
+                <button
+                    class="secondary-button"
+                    id="editCertificateButton"
+                >
+                    Edit Details
+                </button>
 
-                        <div class="eyebrow">
-                            LIVE REWARD WHEEL
-                        </div>
+                <button
+                    class="primary-button"
+                    id="printCertificateButton"
+                >
+                    Print / Save PDF
+                </button>
 
-                        <h2>
-                            Find out what you receive
-                        </h2>
+            </div>
 
-                        <p id="spinSubtitle">
-                            The reward selection changes dynamically
-                            with each round.
+
+            <article class="certificate" id="certificate">
+
+                <div class="certificate-border">
+
+                    <header class="certificate-header">
+
+                        <p class="certificate-status" id="certificateStatus">
+                            PROFESSIONAL CERTIFICATE
                         </p>
 
-                    </div>
+                        <h1 id="certificateInstitute">
+                            Certificate Rewards Program
+                        </h1>
 
-                    <div class="round-badge">
-                        <span>ROUND</span>
-                        <strong id="roundNumber">01</strong>
-                    </div>
+                        <p class="certificate-subtitle">
+                            Professional Skills Recognition Program
+                        </p>
 
-                </div>
-
-
-                <div class="spinner-stage">
-
-                    <div class="wheel-area">
-
-                        <div class="pointer">
-
-                            <svg
-                                width="40"
-                                height="50"
-                                viewBox="0 0 40 50"
-                                fill="none"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    d="M20 48L4 12C1.8 7.1 5.4 2 10.8 2H29.2C34.6 2 38.2 7.1 36 12L20 48Z"
-                                    fill="#10243A"
-                                />
-
-                                <path
-                                    d="M20 37L11 14H29L20 37Z"
-                                    fill="#D9BF7A"
-                                />
-                            </svg>
-
-                        </div>
+                    </header>
 
 
-                        <div
-                            id="wheel"
-                            class="wheel"
-                            aria-label="Prize wheel"
+                    <div class="certificate-main">
+
+                        <p class="certificate-intro">
+                            This certificate is proudly presented to
+                        </p>
+
+                        <h2 id="certificateName">
+                            Recipient Name
+                        </h2>
+
+                        <p class="certificate-text">
+                            in recognition of successfully receiving the
+                            professional reward
+                        </p>
+
+                        <h3 id="certificateTitle">
+                            Professional Certificate
+                        </h3>
+
+                        <p
+                            class="certificate-program"
+                            id="certificateProgram"
                         >
+                            Professional Certificate Program
+                        </p>
 
-                            <div
-                                id="wheelLabels"
-                                class="wheel-labels"
-                            ></div>
 
-                            <div class="wheel-center">
+                        <div class="certificate-details">
 
-                                <div class="wheel-center-ring">
+                            <div class="certificate-detail">
+                                <span>Father's Name</span>
+                                <strong id="certificateFather"></strong>
+                            </div>
 
-                                    <strong>
-                                        SPIN
-                                    </strong>
+                            <div class="certificate-detail">
+                                <span>Graduation</span>
+                                <strong id="certificateGraduation"></strong>
+                            </div>
 
-                                    <span>
-                                        TO DISCOVER
-                                    </span>
+                            <div class="certificate-detail">
+                                <span>Mobile</span>
+                                <strong id="certificateMobile"></strong>
+                            </div>
 
-                                </div>
+                            <div class="certificate-detail">
+                                <span>Email</span>
+                                <strong id="certificateEmail"></strong>
+                            </div>
 
+                            <div class="certificate-detail full">
+                                <span>Address</span>
+                                <strong id="certificateAddress"></strong>
                             </div>
 
                         </div>
 
-
-                        <div
-                            id="wheelGlow"
-                            class="wheel-glow"
-                        ></div>
-
                     </div>
 
 
-                    <div class="spin-controls">
+                    <footer class="certificate-footer">
 
-                        <div class="spin-message-card">
+                        <div class="certificate-meta">
 
-                            <div class="message-icon">
-                                +
+                            <div>
+                                <span>Issue Date</span>
+                                <strong id="certificateDate"></strong>
                             </div>
 
                             <div>
+                                <span>Certificate ID</span>
+                                <strong id="certificateId"></strong>
+                            </div>
 
-                                <strong id="spinMessageTitle">
-                                    Ready when you are
-                                </strong>
-
-                                <span id="spinMessage">
-                                    One smooth spin will reveal your reward.
-                                </span>
-
+                            <div>
+                                <span>Certificate No.</span>
+                                <strong id="certificateNumber"></strong>
                             </div>
 
                         </div>
 
 
-                        <button
-                            id="spinButton"
-                            class="primary-button spin-button"
-                            type="button"
-                        >
+                        <div class="certificate-signature">
 
-                            <span>
-                                Spin the Wheel
-                            </span>
+                            <div class="signature-line"></div>
 
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    d="M12 4V2"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M12 22V20"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M4 12H2"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M22 12H20"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M6.34 6.34L4.93 4.93"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M19.07 19.07L17.66 17.66"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M17.66 6.34L19.07 4.93"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-
-                                <path
-                                    d="M4.93 19.07L6.34 17.66"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                />
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="spin-note">
-                    Reward selection is handled by the application logic.
-                </div>
-
-            </section>
-
-
-            <!-- =====================================================
-                 SCREEN 3: RESULT
-            ====================================================== -->
-
-            <section
-                id="resultScreen"
-                class="screen"
-            >
-
-                <div
-                    id="confettiContainer"
-                    class="confetti-container"
-                ></div>
-
-
-                <div class="result-container">
-
-                    <div
-                        id="resultBadge"
-                        class="result-badge"
-                    >
-                        REWARD REVEALED
-                    </div>
-
-
-                    <div
-                        id="resultIcon"
-                        class="result-icon"
-                    >
-                        C
-                    </div>
-
-
-                    <div
-                        id="resultKicker"
-                        class="result-kicker"
-                    >
-                        CONGRATULATIONS
-                    </div>
-
-
-                    <h2 id="resultTitle">
-                        You received a reward
-                    </h2>
-
-
-                    <p id="resultDescription">
-                        Your selected reward is ready.
-                    </p>
-
-
-                    <div class="prize-card">
-
-                        <div class="prize-card-label">
-                            YOUR REWARD
-                        </div>
-
-                        <div
-                            id="resultPrize"
-                            class="prize-name"
-                        >
-                            Full Stack Web Developer
-                        </div>
-
-                        <div
-                            id="resultPrizeSub"
-                            class="prize-subtitle"
-                        >
-                            Professional Certificate
-                        </div>
-
-                    </div>
-
-
-                    <div class="result-actions">
-
-                        <button
-                            id="claimButton"
-                            class="primary-button"
-                            type="button"
-                        >
-                            Claim Reward
-                        </button>
-
-                        <button
-                            id="spinAgainButton"
-                            class="secondary-button"
-                            type="button"
-                        >
-                            Spin Again
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="resultTip"
-                        class="result-tip"
-                    >
-                        Complete the details carefully to create
-                        your personalized certificate.
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =====================================================
-                 SCREEN 4: CLAIM FORM
-            ====================================================== -->
-
-            <section
-                id="claimScreen"
-                class="screen"
-            >
-
-                <div class="claim-layout">
-
-                    <div class="claim-intro">
-
-                        <div class="eyebrow">
-                            CLAIM YOUR REWARD
-                        </div>
-
-                        <h2>
-                            Let's personalize your certificate
-                        </h2>
-
-                        <p>
-                            Enter your details exactly as they should
-                            appear in the certificate record.
-                        </p>
-
-
-                        <div class="selected-reward-card">
-
-                            <span>
-                                SELECTED REWARD
-                            </span>
-
-                            <strong id="claimPrizeName">
-                                Full Stack Web Developer
+                            <strong id="certificateSignatory">
+                                Program Authorized Signatory
                             </strong>
 
-                        </div>
-
-
-                        <div class="claim-progress">
-
-                            <div class="progress-number">
-                                1
-                            </div>
-
-                            <div>
-                                <strong>
-                                    Recipient details
-                                </strong>
-
-                                <span>
-                                    We use these details to personalize
-                                    the certificate.
-                                </span>
-                            </div>
+                            <span>
+                                Authorized Signatory
+                            </span>
 
                         </div>
 
-
-                        <div class="claim-progress">
-
-                            <div class="progress-number">
-                                2
-                            </div>
-
-                            <div>
-                                <strong>
-                                    Certificate generation
-                                </strong>
-
-                                <span>
-                                    The certificate is assembled after
-                                    your details are submitted.
-                                </span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="claim-form-card">
-
-                        <form
-                            id="claimForm"
-                            novalidate
-                        >
-
-                            <div class="form-grid">
-
-                                <div class="field full">
-
-                                    <label for="fullName">
-                                        Full Name
-                                    </label>
-
-                                    <input
-                                        id="fullName"
-                                        name="fullName"
-                                        type="text"
-                                        placeholder="Enter your full name"
-                                        autocomplete="name"
-                                        required
-                                    >
-
-                                </div>
-
-
-                                <div class="field">
-
-                                    <label for="fatherName">
-                                        Father's Name
-                                    </label>
-
-                                    <input
-                                        id="fatherName"
-                                        name="fatherName"
-                                        type="text"
-                                        placeholder="Enter father's name"
-                                        autocomplete="off"
-                                        required
-                                    >
-
-                                </div>
-
-
-                                <div class="field">
-
-                                    <label for="mobile">
-                                        Mobile Number
-                                    </label>
-
-                                    <input
-                                        id="mobile"
-                                        name="mobile"
-                                        type="tel"
-                                        inputmode="numeric"
-                                        placeholder="Enter mobile number"
-                                        autocomplete="tel"
-                                        required
-                                    >
-
-                                </div>
-
-
-                                <div class="field full">
-
-                                    <label for="email">
-                                        Email Address
-                                    </label>
-
-                                    <input
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        placeholder="Enter email address"
-                                        autocomplete="email"
-                                        required
-                                    >
-
-                                </div>
-
-
-                                <div class="field">
-
-                                    <label for="graduation">
-                                        Graduation / Qualification
-                                    </label>
-
-                                    <input
-                                        id="graduation"
-                                        name="graduation"
-                                        type="text"
-                                        placeholder="Example: BCA"
-                                        autocomplete="off"
-                                        required
-                                    >
-
-                                </div>
-
-
-                                <div class="field">
-
-                                    <label for="address">
-                                        Address
-                                    </label>
-
-                                    <input
-                                        id="address"
-                                        name="address"
-                                        type="text"
-                                        placeholder="City / locality"
-                                        autocomplete="street-address"
-                                        required
-                                    >
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="dynamic-institute-card">
-
-                                <div class="institute-icon">
-                                    I
-                                </div>
-
-                                <div>
-
-                                    <span>
-                                        ISSUING ORGANIZATION
-                                    </span>
-
-                                    <strong id="claimInstitute">
-                                        Your Organization Name
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="form-note">
-                                The issuing organization is supplied by
-                                the application configuration and is not
-                                changed by the claimant.
-                            </div>
-
-
-                            <div class="claim-footer">
-
-                                <button
-                                    id="backToResultButton"
-                                    class="secondary-button"
-                                    type="button"
-                                >
-                                    Back
-                                </button>
-
-
-                                <button
-                                    id="submitClaimButton"
-                                    class="primary-button"
-                                    type="submit"
-                                >
-                                    Generate Certificate
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =====================================================
-                 SCREEN 5: GENERATION
-            ====================================================== -->
-
-            <section
-                id="generationScreen"
-                class="screen"
-            >
-
-                <div class="generation-card">
-
-                    <div class="generation-orbit">
-
-                        <div class="generation-ring ring-one"></div>
-                        <div class="generation-ring ring-two"></div>
-                        <div class="generation-ring ring-three"></div>
-
-                        <div class="generation-core">
-                            C
-                        </div>
-
-                    </div>
-
-
-                    <div class="generation-label">
-                        PREPARING YOUR CERTIFICATE
-                    </div>
-
-
-                    <h2>
-                        Your certificate is being created
-                    </h2>
-
-
-                    <p id="generationMessage">
-                        Checking your details...
-                    </p>
-
-
-                    <div class="generation-progress">
-
-                        <div
-                            id="generationBar"
-                            class="generation-progress-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div class="generation-percent">
-                        <span id="generationPercent">0</span>%
-                    </div>
-
-
-                    <div class="generation-encouragement">
-                        <span></span>
-
-                        <strong id="generationEncouragement">
-                            Good things take a moment to come together.
+                    </footer>
+
+                    <div class="certificate-recipient">
+                        <span>Presented To</span>
+                        <strong id="certificateRecipient">
+                            Recipient Name
                         </strong>
                     </div>
 
                 </div>
 
-            </section>
+            </article>
 
+        </section>
 
-            <!-- =====================================================
-                 SCREEN 6: CERTIFICATE
-            ====================================================== -->
-
-            <section
-                id="certificateScreen"
-                class="screen"
-            >
-
-                <div class="certificate-toolbar">
-
-                    <div>
-
-                        <div class="eyebrow">
-                            REWARD COMPLETED
-                        </div>
-
-                        <h2>
-                            Your personalized certificate
-                        </h2>
-
-                        <p>
-                            Review the information before printing or
-                            saving the certificate as a PDF.
-                        </p>
-
-                    </div>
-
-
-                    <div class="certificate-actions">
-
-                        <button
-                            id="editCertificateButton"
-                            class="secondary-button"
-                            type="button"
-                        >
-                            Edit Details
-                        </button>
-
-
-                        <button
-                            id="printCertificateButton"
-                            class="primary-button"
-                            type="button"
-                        >
-                            Print / Save PDF
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="certificate-wrapper">
-
-                    <article
-                        id="certificate"
-                        class="certificate"
-                    >
-
-                        <div class="certificate-border"></div>
-
-                        <div class="certificate-corner tl"></div>
-                        <div class="certificate-corner tr"></div>
-                        <div class="certificate-corner bl"></div>
-                        <div class="certificate-corner br"></div>
-
-
-                        <div class="certificate-watermark">
-                            ACHIEVEMENT
-                        </div>
-
-
-                        <div class="certificate-top-id">
-
-                            CERTIFICATE ID:
-                            <strong id="certificateId">
-                                ---
-                            </strong>
-
-                        </div>
-
-
-                        <div class="certificate-content">
-
-                            <div
-                                id="certificateInstitute"
-                                class="certificate-institute"
-                            >
-                                YOUR ORGANIZATION NAME
-                            </div>
-
-
-                            <div class="certificate-gold-line"></div>
-
-
-                            <div
-                                id="certificateStatus"
-                                class="certificate-status"
-                            >
-                                Certificate of Achievement
-                            </div>
-
-
-                            <h1 id="certificateTitle">
-                                Full Stack Web Developer
-                            </h1>
-
-
-                            <div class="certificate-presented">
-                                This certificate is presented to
-                            </div>
-
-
-                            <div
-                                id="certificateName"
-                                class="certificate-name"
-                            >
-                                Recipient Name
-                            </div>
-
-
-                            <div class="certificate-name-line"></div>
-
-
-                            <p class="certificate-description">
-                                In recognition of the recipient's
-                                achievement and completion of the
-                                applicable requirements associated with
-                                the professional program stated below.
-                            </p>
-
-
-                            <div
-                                id="certificateProgram"
-                                class="certificate-program"
-                            >
-                                Full Stack Web Development Program
-                            </div>
-
-
-                            <div class="recipient-record">
-
-                                <div>
-                                    <span>Father's Name</span>
-                                    <strong id="certificateFather">
-                                        ---
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>Qualification</span>
-                                    <strong id="certificateGraduation">
-                                        ---
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>Mobile</span>
-                                    <strong id="certificateMobile">
-                                        ---
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>Email</span>
-                                    <strong id="certificateEmail">
-                                        ---
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>Address</span>
-                                    <strong id="certificateAddress">
-                                        ---
-                                    </strong>
-                                </div>
-
-                            </div>
-
-
-                            <div class="certificate-footer">
-
-                                <div class="certificate-signature">
-
-                                    <div class="signature-line"></div>
-
-                                    <strong id="certificateDate">
-                                        ---
-                                    </strong>
-
-                                    <span>
-                                        Date of Issue
-                                    </span>
-
-                                </div>
-
-
-                                <div class="certificate-seal">
-
-                                    <div class="seal-inner">
-
-                                        <span>
-                                            AUTHORIZED
-                                        </span>
-
-                                        <strong>
-                                            C
-                                        </strong>
-
-                                        <span>
-                                            CERTIFICATE
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="certificate-signature">
-
-                                    <div class="signature-line"></div>
-
-                                    <strong id="certificateSignatory">
-                                        Authorized Signatory
-                                    </strong>
-
-                                    <span>
-                                        Issuing Authority
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="certificate-bottom-row">
-
-                                <span>
-                                    Certificate Number:
-                                    <strong id="certificateNumber">
-                                        ---
-                                    </strong>
-                                </span>
-
-                                <span>
-                                    Recipient:
-                                    <strong id="certificateRecipient">
-                                        ---
-                                    </strong>
-                                </span>
-
-                            </div>
-
-
-                            <div class="certificate-disclosure">
-                                Standalone demonstration credential.
-                                Actual validity and recognition depend
-                                on the real issuing organization's
-                                authorization and policies.
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </section>
-
-        </main>
-
-    </div>
-
+    </main>
 
     <script src="script.js"></script>
 
