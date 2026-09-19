@@ -1,621 +1,413 @@
 "use strict";
 
-
-/* =========================================================
-   APPLICATION CONFIGURATION
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| APPLICATION CONFIGURATION
+|--------------------------------------------------------------------------
+|
+| No manual organization-name input is required from the user.
+| The certificate is issued by the program itself.
+|
+| Do not replace this with a real university, government body, or
+| accreditation organization unless you actually have authorization
+| to issue certificates under that organization.
+|
+*/
 
 const APP_CONFIG = {
-
-    institutionName:
-        "Your Organization Name",
-
-    authorizedSignatory:
-        "Authorized Signatory",
-
-    defaultProgramSuffix:
-        "Professional Certificate Program",
-
-    demoMode:
-        true
-
+    issuerName: "Certificate Rewards Program",
+    issuerSubtitle: "Professional Skills Recognition Program",
+    authorizedSignatory: "Program Authorized Signatory",
+    certificatePrefix: "CRP",
+    demoMode: false
 };
 
 
-/* =========================================================
-   PRIZES
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| PRIZES
+|--------------------------------------------------------------------------
+*/
 
 const PRIZES = [
-
     {
-        title: "AI Assistant Web Developer",
-        subtitle: "Professional Certificate",
-        program: "AI Assisted Web Development Program",
-        type: "certificate"
+        id: "AI_ASSISTANT_WEB_DEVELOPER",
+        name: "AI Assistant Web Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "AI Assistant Web Developer Certificate Program"
+    },
+    {
+        id: "WEB_DEVELOPER",
+        name: "Web Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Web Developer Certificate Program"
+    },
+    {
+        id: "FULL_STACK_WEB_DEVELOPER",
+        name: "Full Stack Web Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Full Stack Web Developer Certificate Program"
+    },
+    {
+        id: "SOFTWARE_DEVELOPER",
+        name: "Software Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Software Developer Certificate Program"
+    },
+    {
+        id: "SOFTWARE_ENGINEER",
+        name: "Software Engineer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Software Engineering Certificate Program"
+    },
+    {
+        id: "DATA_ANALYST",
+        name: "Data Analyst",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Data Analytics Certificate Program"
+    },
+    {
+        id: "FRONTEND_DEVELOPER",
+        name: "Frontend Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Frontend Development Certificate Program"
+    },
+    {
+        id: "BACKEND_DEVELOPER",
+        name: "Backend Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Backend Development Certificate Program"
+    },
+    {
+        id: "PYTHON_DEVELOPER",
+        name: "Python Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Python Development Certificate Program"
+    },
+    {
+        id: "AI_DEVELOPER",
+        name: "AI Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "AI Development Certificate Program"
+    },
+    {
+        id: "DATA_SCIENCE",
+        name: "Data Science",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Data Science Certificate Program"
+    },
+    {
+        id: "CYBERSECURITY",
+        name: "Cybersecurity Professional",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Cybersecurity Professional Certificate Program"
+    },
+    {
+        id: "CLOUD_COMPUTING",
+        name: "Cloud Computing Professional",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Cloud Computing Professional Certificate Program"
+    },
+    {
+        id: "DEVOPS",
+        name: "DevOps Professional",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "DevOps Professional Certificate Program"
+    },
+    {
+        id: "JAVASCRIPT_DEVELOPER",
+        name: "JavaScript Developer",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "JavaScript Development Certificate Program"
+    },
+    {
+        id: "TECHNICAL_SOFTWARE",
+        name: "Technical Software Professional",
+        type: "certificate",
+        description: "You received a professional certificate reward.",
+        program: "Technical Software Professional Certificate Program"
     },
 
     {
-        title: "Web Developer",
-        subtitle: "Professional Certificate",
-        program: "Professional Web Development Program",
-        type: "certificate"
+        id: "CODING_LEARNING_REWARD",
+        name: "Coding Learning Reward",
+        type: "reward",
+        description: "You received a learning reward for your development journey.",
+        program: "Coding Learning Reward Program"
     },
-
     {
-        title: "Full Stack Web Developer",
-        subtitle: "Professional Certificate",
-        program: "Full Stack Web Development Program",
-        type: "certificate"
+        id: "DEVELOPER_PRACTICE_REWARD",
+        name: "Developer Practice Reward",
+        type: "reward",
+        description: "You received a reward for continued developer practice.",
+        program: "Developer Practice Reward Program"
     },
-
     {
-        title: "Software Developer",
-        subtitle: "Professional Certificate",
-        program: "Software Development Program",
-        type: "certificate"
+        id: "TECHNOLOGY_EXPLORER_REWARD",
+        name: "Technology Explorer Reward",
+        type: "reward",
+        description: "You received a technology exploration reward.",
+        program: "Technology Explorer Reward Program"
     },
-
     {
-        title: "Software Engineer",
-        subtitle: "Professional Certificate",
-        program: "Software Engineering Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Data Analyst",
-        subtitle: "Professional Certificate",
-        program: "Data Analytics Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Frontend Developer",
-        subtitle: "Professional Certificate",
-        program: "Frontend Development Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Backend Developer",
-        subtitle: "Professional Certificate",
-        program: "Backend Development Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Python Developer",
-        subtitle: "Professional Certificate",
-        program: "Python Development Program",
-        type: "certificate"
-    },
-
-    {
-        title: "AI Developer",
-        subtitle: "Professional Certificate",
-        program: "Artificial Intelligence Development Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Data Science",
-        subtitle: "Professional Certificate",
-        program: "Data Science Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Cybersecurity Professional",
-        subtitle: "Professional Certificate",
-        program: "Cybersecurity Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Cloud Computing Professional",
-        subtitle: "Professional Certificate",
-        program: "Cloud Computing Program",
-        type: "certificate"
-    },
-
-    {
-        title: "DevOps Professional",
-        subtitle: "Professional Certificate",
-        program: "DevOps Engineering Program",
-        type: "certificate"
-    },
-
-    {
-        title: "JavaScript Developer",
-        subtitle: "Professional Certificate",
-        program: "JavaScript Development Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Technical Software Professional",
-        subtitle: "Professional Certificate",
-        program: "Professional Software Skills Program",
-        type: "certificate"
-    },
-
-    {
-        title: "Coding Learning Reward",
-        subtitle: "Achievement Reward",
-        program: "",
-        type: "reward"
-    },
-
-    {
-        title: "Developer Practice Reward",
-        subtitle: "Achievement Reward",
-        program: "",
-        type: "reward"
-    },
-
-    {
-        title: "Technology Explorer Reward",
-        subtitle: "Achievement Reward",
-        program: "",
-        type: "reward"
-    },
-
-    {
-        title: "Next Challenge Reward",
-        subtitle: "Achievement Reward",
-        program: "",
-        type: "reward"
+        id: "NEXT_CHALLENGE_REWARD",
+        name: "Next Challenge Reward",
+        type: "reward",
+        description: "You received a reward for your next development challenge.",
+        program: "Next Challenge Reward Program"
     }
-
 ];
 
 
-/* =========================================================
-   SCREEN REFERENCES
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| DOM
+|--------------------------------------------------------------------------
+*/
+
+const $ = (id) => document.getElementById(id);
 
 const screens = {
-
-    welcome:
-        document.getElementById("welcomeScreen"),
-
-    spinner:
-        document.getElementById("spinnerScreen"),
-
-    result:
-        document.getElementById("resultScreen"),
-
-    claim:
-        document.getElementById("claimScreen"),
-
-    generation:
-        document.getElementById("generationScreen"),
-
-    certificate:
-        document.getElementById("certificateScreen")
-
+    welcome: $("welcomeScreen"),
+    spinner: $("spinnerScreen"),
+    result: $("resultScreen"),
+    claim: $("claimScreen"),
+    generation: $("generationScreen"),
+    certificate: $("certificateScreen")
 };
 
+const wheel = $("wheel");
+const wheelLabels = $("wheelLabels");
+const wheelArea = $("wheelArea");
+const spinButton = $("spinButton");
 
-const wheel =
-    document.getElementById("wheel");
+const startButton = $("startButton");
+const claimButton = $("claimButton");
+const spinAgainButton = $("spinAgainButton");
+const backToResultButton = $("backToResultButton");
+const editCertificateButton = $("editCertificateButton");
+const printCertificateButton = $("printCertificateButton");
 
-const wheelArea =
-    document.querySelector(".wheel-area");
-
-const wheelLabels =
-    document.getElementById("wheelLabels");
-
-const spinButton =
-    document.getElementById("spinButton");
-
-const roundNumber =
-    document.getElementById("roundNumber");
-
-const spinMessageTitle =
-    document.getElementById("spinMessageTitle");
-
-const spinMessage =
-    document.getElementById("spinMessage");
-
-
-let currentRotation = 0;
+const claimForm = $("claimForm");
 
 let currentPrize = null;
-
-let currentPrizeIndex = null;
-
+let currentPrizeIndex = -1;
+let currentRotation = 0;
 let currentRound = 1;
-
 let isSpinning = false;
 
-let latestClaimData = null;
+let userClaimData = null;
 
 
-/* =========================================================
-   SCREEN SWITCH
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| SCREEN TRANSITION
+|--------------------------------------------------------------------------
+*/
 
-function showScreen(screenName) {
+function showScreen(screen) {
 
-    Object
-        .values(screens)
-        .forEach(
-            function (screen) {
+    Object.values(screens).forEach((item) => {
+        if (item) {
+            item.classList.remove("active");
+        }
+    });
 
-                screen.classList.remove("active");
-
-            }
-        );
-
-
-    const target =
-        screens[screenName];
-
-
-    if (!target) {
-        return;
+    if (screen) {
+        screen.classList.add("active");
     }
-
-
-    target.classList.add("active");
-
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-
 }
 
 
-/* =========================================================
-   WELCOME MESSAGE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| WELCOME MESSAGE
+|--------------------------------------------------------------------------
+*/
 
 const welcomeMessages = [
-
-    "Your next achievement could be one spin away.",
-
-    "Every round brings a different possibility.",
-
-    "Stay curious. The wheel is ready.",
-
-    "One decision. One spin. One reward.",
-
-    "Your professional reward is waiting to be revealed."
-
+    "Your opportunity is ready.",
+    "A professional reward is waiting.",
+    "Discover what your next achievement could be.",
+    "Your next certificate may be one spin away."
 ];
-
 
 let welcomeMessageIndex = 0;
 
+function rotateWelcomeMessage() {
 
-setInterval(
-    function () {
+    if (!$("welcomeEncouragement")) {
+        return;
+    }
 
-        welcomeMessageIndex =
-            (
-                welcomeMessageIndex + 1
-            ) %
-            welcomeMessages.length;
+    $("welcomeEncouragement").textContent =
+        welcomeMessages[welcomeMessageIndex];
 
-
-        const element =
-            document.getElementById(
-                "welcomeEncouragement"
-            );
+    welcomeMessageIndex =
+        (welcomeMessageIndex + 1) % welcomeMessages.length;
+}
 
 
-        if (element) {
-
-            element.textContent =
-                welcomeMessages[
-                    welcomeMessageIndex
-                ];
-
-        }
-
-    },
-    3800
-);
-
-
-/* =========================================================
-   INITIALIZE WHEEL
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| WHEEL
+|--------------------------------------------------------------------------
+*/
 
 function initializeWheel() {
 
-    const count =
-        PRIZES.length;
+    if (!wheel || !wheelLabels) {
+        return;
+    }
 
-    const step =
-        360 / count;
-
-
+    wheel.innerHTML = "";
     wheelLabels.innerHTML = "";
 
+    const count = PRIZES.length;
+    const segmentAngle = 360 / count;
 
-    PRIZES.forEach(
-        function (prize, index) {
+    const segmentColors = [
+        "#f5f5f5",
+        "#ffffff"
+    ];
 
-            const label =
-                document.createElement("div");
+    PRIZES.forEach((prize, index) => {
 
+        const segment = document.createElement("div");
 
-            label.className =
-                "wheel-label";
+        segment.className = "wheel-segment";
 
+        segment.style.transform =
+            `rotate(${index * segmentAngle}deg)`;
 
-            const centerAngle =
-                index * step +
-                step / 2;
+        segment.style.background =
+            segmentColors[index % segmentColors.length];
 
-
-            label.style.setProperty(
-                "--angle",
-                `${centerAngle}deg`
-            );
-
-
-            label.textContent =
-                prize.title;
+        wheel.appendChild(segment);
 
 
-            label.dataset.index =
-                index;
+        const label = document.createElement("div");
 
+        label.className = "wheel-label";
 
-            wheelLabels.appendChild(
-                label
-            );
+        label.textContent = prize.name;
 
-        }
-    );
+        const angle =
+            index * segmentAngle + segmentAngle / 2;
 
+        label.style.transform =
+            `rotate(${angle}deg) translateX(0)`;
 
-    roundNumber.textContent =
-        String(currentRound)
-            .padStart(2, "0");
-
-
-    updateDynamicWheelMessage();
-
+        wheelLabels.appendChild(label);
+    });
 }
 
 
-/* =========================================================
-   TIME CONTEXT
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| TIME CONTEXT
+|--------------------------------------------------------------------------
+*/
 
 function getTimeContext() {
 
-    const now =
-        new Date();
-
-
-    const hour =
-        now.getHours();
-
-    const minute =
-        now.getMinutes();
-
-    const second =
-        now.getSeconds();
-
-
-    let periodMessage;
-
-
-    if (hour < 12) {
-
-        periodMessage =
-            "A fresh round is ready to begin your day.";
-
-    }
-    else if (hour < 17) {
-
-        periodMessage =
-            "Your afternoon reward round is ready.";
-
-    }
-    else {
-
-        periodMessage =
-            "Your evening reward round is ready.";
-
-    }
-
+    const now = new Date();
 
     return {
-        hour,
-        minute,
-        second,
-        periodMessage
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        second: now.getSeconds(),
+        millisecond: now.getMilliseconds()
     };
-
 }
 
 
-/* =========================================================
-   DYNAMIC SPIN MESSAGE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| DYNAMIC MESSAGE
+|--------------------------------------------------------------------------
+*/
 
 function updateDynamicWheelMessage() {
 
-    const context =
-        getTimeContext();
+    const context = getTimeContext();
 
-
-    const subtitle =
-        document.getElementById(
-            "spinSubtitle"
-        );
-
-
-    if (subtitle) {
-
-        subtitle.textContent =
-            context.periodMessage;
-
+    if ($("roundNumber")) {
+        $("roundNumber").textContent =
+            `Round ${String(currentRound).padStart(2, "0")}`;
     }
 
+    if ($("spinSubtitle")) {
 
-    const messages = [
+        const messages = [
+            "Your reward is selected dynamically for this round.",
+            "Every result includes a reward.",
+            "Your current round is ready.",
+            "Spin when you are ready."
+        ];
 
-        {
-            title:
-                "Ready when you are",
+        const index =
+            (context.minute + currentRound) %
+            messages.length;
 
-            text:
-                "One smooth spin will reveal your reward."
-        },
-
-        {
-            title:
-                "Watch the final stop",
-
-            text:
-                "The wheel will slow down before revealing the selected reward."
-        },
-
-        {
-            title:
-                "Stay with the moment",
-
-            text:
-                "The final position is selected by the application logic."
-        },
-
-        {
-            title:
-                "Something is waiting",
-
-            text:
-                "Your reward will be revealed after the wheel completes its motion."
-        }
-
-    ];
-
-
-    const index =
-        (
-            context.minute +
-            currentRound
-        ) %
-        messages.length;
-
-
-    spinMessageTitle.textContent =
-        messages[index].title;
-
-
-    spinMessage.textContent =
-        messages[index].text;
-
+        $("spinSubtitle").textContent = messages[index];
+    }
 }
 
 
-/* =========================================================
-   RANDOM INTEGER
-========================================================= */
-
-function randomInteger(max) {
-
-    if (
-        !Number.isFinite(max) ||
-        max <= 0
-    ) {
-
-        return 0;
-
-    }
-
-
-    if (
-        window.crypto &&
-        typeof window.crypto.getRandomValues ===
-        "function"
-    ) {
-
-        const array =
-            new Uint32Array(1);
-
-
-        window.crypto.getRandomValues(
-            array
-        );
-
-
-        return array[0] % max;
-
-    }
-
-
-    return Math.floor(
-        Math.random() * max
-    );
-
-}
-
-
-/* =========================================================
-   SELECT PRIZE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| DYNAMIC PRIZE SELECTION
+|--------------------------------------------------------------------------
+*/
 
 function selectDynamicPrize() {
 
-    const context =
-        getTimeContext();
+    const context = getTimeContext();
 
-
-    const timeSeed =
+    const seed =
         (
-            context.hour * 60 +
-            context.minute +
+            context.hour * 3600 +
+            context.minute * 60 +
             context.second +
             currentRound * 17
         );
 
-
-    let index =
-        (
-            timeSeed +
-            randomInteger(
-                PRIZES.length
-            )
-        ) %
-        PRIZES.length;
-
-
-    if (
-        index >= 16 &&
-        randomInteger(100) < 45
-    ) {
-
-        index =
-            randomInteger(16);
-
-    }
-
+    const index =
+        Math.abs(seed) % PRIZES.length;
 
     return {
-
-        index,
-
-        prize:
-            PRIZES[index]
-
+        prize: PRIZES[index],
+        index
     };
-
 }
 
 
-/* =========================================================
-   SPIN WHEEL
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| SPIN
+|--------------------------------------------------------------------------
+*/
 
 function spinWheel() {
 
@@ -623,212 +415,109 @@ function spinWheel() {
         return;
     }
 
+    isSpinning = true;
 
-    isSpinning =
-        true;
+    spinButton.disabled = true;
 
-
-    spinButton.disabled =
-        true;
-
-
-    wheelArea.classList.add(
-        "spinning"
-    );
-
-
-    spinMessageTitle.textContent =
-        "The wheel is moving";
-
-
-    spinMessage.textContent =
-        "Hold on while the reward wheel finds its final position.";
-
-
-    const selection =
+    const selected =
         selectDynamicPrize();
 
+    currentPrize = selected.prize;
+    currentPrizeIndex = selected.index;
 
-    currentPrizeIndex =
-        selection.index;
+    const segmentAngle =
+        360 / PRIZES.length;
 
+    const targetAngle =
+        360 - (
+            selected.index * segmentAngle +
+            segmentAngle / 2
+        );
 
-    currentPrize =
-        selection.prize;
-
-
-    const count =
-        PRIZES.length;
-
-
-    const step =
-        360 / count;
-
-
-    const targetCenter =
-        currentPrizeIndex *
-        step +
-        step / 2;
-
-
-    const extraTurns =
-        7 +
-        randomInteger(3);
-
+    const extraRotations =
+        5 + Math.floor(Math.random() * 3);
 
     const currentNormalized =
-        (
-            currentRotation %
-            360 +
-            360
-        ) %
-        360;
+        ((currentRotation % 360) + 360) % 360;
 
-
-    let targetDelta =
-        (
-            360 -
-            targetCenter -
-            currentNormalized
-        ) %
-        360;
-
-
-    if (
-        targetDelta < 0
-    ) {
-
-        targetDelta += 360;
-
-    }
-
-
-    currentRotation =
-        currentRotation +
-        extraTurns * 360 +
-        targetDelta;
-
+    const requiredRotation =
+        extraRotations * 360 +
+        targetAngle -
+        currentNormalized;
 
     const duration =
-        6200 +
-        randomInteger(1800);
+        4500 + Math.floor(Math.random() * 1800);
 
+    currentRotation += requiredRotation;
 
     wheel.style.transition =
-        `transform ${duration}ms cubic-bezier(.12,.74,.18,1)`;
+        `transform ${duration}ms cubic-bezier(0.12, 0.78, 0.18, 1)`;
 
+    wheel.style.transform =
+        `rotate(${currentRotation}deg)`;
 
-    requestAnimationFrame(
-        function () {
+    if (wheelLabels) {
 
-            wheel.style.transform =
-                `rotate(${currentRotation}deg)`;
+        wheelLabels.style.transition =
+            `transform ${duration}ms cubic-bezier(0.12, 0.78, 0.18, 1)`;
 
-        }
-    );
+        wheelLabels.style.transform =
+            `rotate(${currentRotation}deg)`;
+    }
 
+    setTimeout(() => {
 
-    setTimeout(
-        function () {
+        finishSpin();
 
-            finishSpin();
-
-        },
-        duration + 150
-    );
-
+    }, duration + 100);
 }
 
 
-/* =========================================================
-   FINISH SPIN
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| FINISH SPIN
+|--------------------------------------------------------------------------
+*/
 
 function finishSpin() {
 
-    isSpinning =
-        false;
+    isSpinning = false;
 
+    currentRound++;
 
-    spinButton.disabled =
-        false;
-
-
-    wheelArea.classList.remove(
-        "spinning"
-    );
-
+    spinButton.disabled = false;
 
     highlightWinningSegment();
 
-
-    currentRound += 1;
-
-
-    roundNumber.textContent =
-        String(currentRound)
-            .padStart(2, "0");
-
-
-    spinMessageTitle.textContent =
-        "Reward found";
-
-
-    spinMessage.textContent =
-        "Your reward has been revealed.";
-
-
-    setTimeout(
-        function () {
-
-            showResult();
-
-        },
-        600
-    );
-
+    showResult();
 }
 
 
-/* =========================================================
-   WINNING SEGMENT
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| WINNING SEGMENT
+|--------------------------------------------------------------------------
+*/
 
 function highlightWinningSegment() {
 
-    document
-        .querySelectorAll(".wheel-label")
-        .forEach(
-            function (label) {
-
-                label.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-
-    const target =
-        document.querySelector(
-            `.wheel-label[data-index="${currentPrizeIndex}"]`
-        );
-
-
-    if (target) {
-
-        target.classList.add(
-            "active"
-        );
-
+    if (!wheel) {
+        return;
     }
 
+    wheel.classList.remove("winner-pulse");
+
+    void wheel.offsetWidth;
+
+    wheel.classList.add("winner-pulse");
 }
 
 
-/* =========================================================
-   RESULT SCREEN
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| RESULT
+|--------------------------------------------------------------------------
+*/
 
 function showResult() {
 
@@ -836,236 +525,128 @@ function showResult() {
         return;
     }
 
-
     const isCertificate =
-        currentPrize.type ===
-        "certificate";
+        currentPrize.type === "certificate";
 
-
-    const resultBadge =
-        document.getElementById(
-            "resultBadge"
-        );
-
-    const resultIcon =
-        document.getElementById(
-            "resultIcon"
-        );
-
-    const resultKicker =
-        document.getElementById(
-            "resultKicker"
-        );
-
-    const resultTitle =
-        document.getElementById(
-            "resultTitle"
-        );
-
-    const resultDescription =
-        document.getElementById(
-            "resultDescription"
-        );
-
-    const resultPrize =
-        document.getElementById(
-            "resultPrize"
-        );
-
-    const resultPrizeSub =
-        document.getElementById(
-            "resultPrizeSub"
-        );
-
-    const claimButton =
-        document.getElementById(
-            "claimButton"
-        );
-
-    const resultTip =
-        document.getElementById(
-            "resultTip"
-        );
-
-
-    if (isCertificate) {
-
-        resultBadge.textContent =
-            "CONGRATULATIONS";
-
-        resultIcon.textContent =
-            "C";
-
-        resultKicker.textContent =
-            "CERTIFICATE REWARD";
-
-        resultTitle.textContent =
-            "You won a professional certificate";
-
-        resultDescription.textContent =
-            "Your selected certificate reward is ready to claim.";
-
-        claimButton.textContent =
-            "Claim Certificate";
-
-        resultTip.textContent =
-            "Enter your details carefully. They will be used in the personalized certificate.";
-
-
-        createConfetti();
-
-    }
-    else {
-
-        resultBadge.textContent =
-            "REWARD REVEALED";
-
-        resultIcon.textContent =
-            "R";
-
-        resultKicker.textContent =
-            "ACHIEVEMENT REWARD";
-
-        resultTitle.textContent =
-            "You received a reward";
-
-        resultDescription.textContent =
-            "This round brought you a recognition reward.";
-
-        claimButton.textContent =
-            "Claim Reward";
-
-        resultTip.textContent =
-            "You can continue exploring the experience with another round.";
-
+    if ($("resultBadge")) {
+        $("resultBadge").textContent =
+            isCertificate
+                ? "Certificate Reward"
+                : "Learning Reward";
     }
 
+    if ($("resultKicker")) {
+        $("resultKicker").textContent =
+            isCertificate
+                ? "CERTIFICATE REVEALED"
+                : "REWARD REVEALED";
+    }
 
-    resultPrize.textContent =
-        currentPrize.title;
+    if ($("resultTitle")) {
+        $("resultTitle").textContent =
+            isCertificate
+                ? "You Won"
+                : "Reward Revealed";
+    }
 
+    if ($("resultDescription")) {
+        $("resultDescription").textContent =
+            currentPrize.description;
+    }
 
-    resultPrizeSub.textContent =
-        currentPrize.subtitle;
+    if ($("resultPrize")) {
+        $("resultPrize").textContent =
+            currentPrize.name;
+    }
 
+    if ($("resultPrizeSub")) {
+        $("resultPrizeSub").textContent =
+            currentPrize.program;
+    }
 
-    showScreen("result");
+    if ($("claimButton")) {
 
+        if (isCertificate) {
+            claimButton.textContent =
+                "Claim Certificate";
+            claimButton.style.display =
+                "inline-flex";
+        } else {
+            claimButton.textContent =
+                "Claim Reward";
+            claimButton.style.display =
+                "inline-flex";
+        }
+    }
+
+    if ($("resultTip")) {
+
+        $("resultTip").textContent =
+            isCertificate
+                ? "Complete your details to generate your certificate."
+                : "You can claim this reward or try another round.";
+    }
+
+    createConfetti();
+
+    showScreen(screens.result);
 }
 
 
-/* =========================================================
-   CONFETTI
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CONFETTI
+|--------------------------------------------------------------------------
+*/
 
 function createConfetti() {
 
     const container =
-        document.getElementById(
-            "confettiContainer"
-        );
+        $("confettiContainer");
 
+    if (!container) {
+        return;
+    }
 
-    container.innerHTML =
-        "";
+    container.innerHTML = "";
 
-
-    const colors = [
-
-        "#17324B",
-        "#2866B7",
-        "#B9974B",
-        "#D9BF7A",
-        "#477A5A",
-        "#FFFFFF"
-
-    ];
-
-
-    for (
-        let i = 0;
-        i < 95;
-        i++
-    ) {
+    for (let i = 0; i < 32; i++) {
 
         const piece =
-            document.createElement(
-                "div"
-            );
+            document.createElement("span");
 
-
-        piece.className =
-            "confetti";
-
-
-        const x =
-            Math.random() * 100 -
-            50;
-
-
-        const duration =
-            1.7 +
-            Math.random() * 2.2;
-
+        piece.className = "confetti";
 
         piece.style.left =
             `${Math.random() * 100}%`;
 
+        piece.style.top =
+            `${Math.random() * 15}%`;
 
         piece.style.setProperty(
             "--x",
-            `${x}vw`
+            `${(Math.random() - 0.5) * 300}px`
         );
-
-
-        piece.style.setProperty(
-            "--duration",
-            `${duration}s`
-        );
-
-
-        piece.style.setProperty(
-            "--rotation",
-            `${360 + Math.random() * 720}deg`
-        );
-
-
-        piece.style.background =
-            colors[
-                Math.floor(
-                    Math.random() *
-                    colors.length
-                )
-            ];
-
 
         piece.style.animationDelay =
-            `${Math.random() * .25}s`;
+            `${Math.random() * 0.25}s`;
 
-
-        container.appendChild(
-            piece
-        );
-
+        container.appendChild(piece);
     }
 
+    setTimeout(() => {
 
-    setTimeout(
-        function () {
+        container.innerHTML = "";
 
-            container.innerHTML =
-                "";
-
-        },
-        4500
-    );
-
+    }, 2200);
 }
 
 
-/* =========================================================
-   CLAIM SCREEN
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CLAIM SCREEN
+|--------------------------------------------------------------------------
+*/
 
 function openClaimScreen() {
 
@@ -1073,413 +654,284 @@ function openClaimScreen() {
         return;
     }
 
+    if ($("claimPrizeName")) {
+        $("claimPrizeName").textContent =
+            currentPrize.name;
+    }
 
-    document.getElementById(
-        "claimPrizeName"
-    ).textContent =
-        currentPrize.title;
+    if ($("claimInstitute")) {
+        $("claimInstitute").textContent =
+            APP_CONFIG.issuerName;
+    }
 
-
-    document.getElementById(
-        "claimInstitute"
-    ).textContent =
-        APP_CONFIG.institutionName;
-
-
-    showScreen("claim");
-
+    showScreen(screens.claim);
 }
 
 
-/* =========================================================
-   CLEAN VALUE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CLEAN TEXT
+|--------------------------------------------------------------------------
+*/
 
 function clean(value) {
 
-    return String(
-        value || ""
-    )
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .trim();
-
+    return String(value || "")
+        .trim()
+        .replace(/\s+/g, " ");
 }
 
 
-/* =========================================================
-   VALIDATE FIELD
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| VALIDATION
+|--------------------------------------------------------------------------
+*/
 
-function validateField(element) {
+function setFieldError(field, message) {
 
-    if (!element) {
+    if (!field) {
+        return false;
+    }
+
+    const wrapper =
+        field.closest(".field");
+
+    if (!wrapper) {
+        return false;
+    }
+
+    wrapper.classList.toggle(
+        "invalid",
+        Boolean(message)
+    );
+
+    const error =
+        wrapper.querySelector(".error-message");
+
+    if (error) {
+        error.textContent =
+            message || "";
+    }
+
+    return !message;
+}
+
+
+function validateField(field) {
+
+    if (!field) {
+        return false;
+    }
+
+    const value =
+        clean(field.value);
+
+    if (!value) {
+
+        setFieldError(
+            field,
+            "This field is required."
+        );
+
         return false;
     }
 
 
-    const field =
-        element.closest(
-            ".field"
-        );
+    if (field.id === "mobile") {
 
+        const mobile =
+            value.replace(/\D/g, "");
 
-    const value =
-        clean(
-            element.value
-        );
+        if (mobile.length < 10) {
 
+            setFieldError(
+                field,
+                "Enter a valid mobile number."
+            );
 
-    let valid =
-        value.length > 0;
-
-
-    if (
-        element.id ===
-        "email"
-    ) {
-
-        valid =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                .test(value);
-
+            return false;
+        }
     }
 
 
-    if (
-        element.id ===
-        "mobile"
-    ) {
+    if (field.id === "email") {
 
-        valid =
-            /^[0-9+\-\s()]{8,20}$/
-                .test(value);
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+        if (!emailPattern.test(value)) {
+
+            setFieldError(
+                field,
+                "Enter a valid email address."
+            );
+
+            return false;
+        }
     }
 
 
-    if (field) {
+    setFieldError(field, "");
 
-        field.classList.toggle(
-            "invalid",
-            !valid
-        );
-
-    }
-
-
-    return valid;
-
+    return true;
 }
 
-
-/* =========================================================
-   VALIDATE FORM
-========================================================= */
 
 function validateClaimForm() {
 
-    const requiredFields =
-        document.querySelectorAll(
-            "#claimForm input[required]"
-        );
+    if (!claimForm) {
+        return false;
+    }
 
+    const fields = [
+        $("fullName"),
+        $("fatherName"),
+        $("mobile"),
+        $("email"),
+        $("graduation"),
+        $("address")
+    ];
 
-    let valid =
-        true;
+    let valid = true;
 
+    fields.forEach((field) => {
 
-    requiredFields.forEach(
-        function (field) {
-
-            if (
-                !validateField(
-                    field
-                )
-            ) {
-
-                valid =
-                    false;
-
-            }
-
+        if (!validateField(field)) {
+            valid = false;
         }
-    );
-
+    });
 
     return valid;
-
 }
 
 
-/* =========================================================
-   COLLECT FORM DATA
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CLAIM DATA
+|--------------------------------------------------------------------------
+*/
 
 function collectClaimData() {
 
     return {
-
-        name:
-            clean(
-                document.getElementById(
-                    "fullName"
-                ).value
-            ),
-
-        fatherName:
-            clean(
-                document.getElementById(
-                    "fatherName"
-                ).value
-            ),
-
-        mobile:
-            clean(
-                document.getElementById(
-                    "mobile"
-                ).value
-            ),
-
-        email:
-            clean(
-                document.getElementById(
-                    "email"
-                ).value
-            ),
-
-        graduation:
-            clean(
-                document.getElementById(
-                    "graduation"
-                ).value
-            ),
-
-        address:
-            clean(
-                document.getElementById(
-                    "address"
-                ).value
-            )
-
+        fullName: clean($("fullName").value),
+        fatherName: clean($("fatherName").value),
+        mobile: clean($("mobile").value),
+        email: clean($("email").value),
+        graduation: clean($("graduation").value),
+        address: clean($("address").value)
     };
-
 }
 
 
-/* =========================================================
-   CERTIFICATE ID
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CERTIFICATE ID
+|--------------------------------------------------------------------------
+*/
 
 function generateCertificateId() {
 
-    const year =
-        new Date()
-            .getFullYear();
+    const now =
+        new Date();
 
+    const datePart =
+        [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, "0"),
+            String(now.getDate()).padStart(2, "0")
+        ].join("");
 
-    const timestamp =
-        Date.now()
-            .toString()
-            .slice(-8);
+    const randomPart =
+        Math.floor(
+            100000 + Math.random() * 900000
+        );
 
-
-    const random =
-        String(
-            randomInteger(1000)
-        )
-            .padStart(
-                3,
-                "0"
-            );
-
-
-    return (
-        `CERT-${year}-${timestamp}-${random}`
-    );
-
+    return `${APP_CONFIG.certificatePrefix}-${datePart}-${randomPart}`;
 }
 
 
-/* =========================================================
-   DATE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| DATE
+|--------------------------------------------------------------------------
+*/
 
 function getDateString() {
 
-    return new Date()
-        .toLocaleDateString(
-            "en-GB",
-            {
-                day:
-                    "2-digit",
-
-                month:
-                    "long",
-
-                year:
-                    "numeric"
-            }
-        );
-
+    return new Intl.DateTimeFormat(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        }
+    ).format(new Date());
 }
 
 
-/* =========================================================
-   GENERATION STEPS
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| GENERATION
+|--------------------------------------------------------------------------
+*/
 
 const generationSteps = [
-
-    {
-        message:
-            "Checking your submitted details...",
-
-        encouragement:
-            "A careful submission creates a cleaner final document."
-    },
-
-    {
-        message:
-            "Preparing your personalized certificate...",
-
-        encouragement:
-            "Your selected achievement is being matched to the certificate layout."
-    },
-
-    {
-        message:
-            "Assigning your certificate identification...",
-
-        encouragement:
-            "Your certificate record is taking shape."
-    },
-
-    {
-        message:
-            "Applying the selected professional design...",
-
-        encouragement:
-            "The details are being arranged for a polished presentation."
-    },
-
-    {
-        message:
-            "Finalizing the certificate presentation...",
-
-        encouragement:
-            "Almost there. Your personalized result is nearly ready."
-    },
-
-    {
-        message:
-            "Completing the final certificate rendering...",
-
-        encouragement:
-            "Your certificate is ready to be revealed."
-    }
-
+    "Checking your reward details...",
+    "Preparing certificate information...",
+    "Creating your certificate record...",
+    "Applying recipient information...",
+    "Preparing the final certificate...",
+    "Completing the final certificate rendering..."
 ];
 
 
-/* =========================================================
-   FIXED CERTIFICATE GENERATION
-========================================================= */
+function resetGenerationScreen() {
+
+    if ($("generationBar")) {
+        $("generationBar").style.width = "0%";
+    }
+
+    if ($("generationPercent")) {
+        $("generationPercent").textContent = "0%";
+    }
+
+    if ($("generationMessage")) {
+        $("generationMessage").textContent =
+            generationSteps[0];
+    }
+}
+
 
 function generateCertificate() {
 
-    latestClaimData =
-        collectClaimData();
+    showScreen(screens.generation);
 
+    resetGenerationScreen();
 
-    showScreen(
-        "generation"
-    );
+    const totalDuration = 4200;
+    const startTime = performance.now();
 
+    let finished = false;
 
-    const progressBar =
-        document.getElementById(
-            "generationBar"
-        );
+    function update(now) {
 
-    const progressNumber =
-        document.getElementById(
-            "generationPercent"
-        );
-
-    const generationMessage =
-        document.getElementById(
-            "generationMessage"
-        );
-
-    const generationEncouragement =
-        document.getElementById(
-            "generationEncouragement"
-        );
-
-
-    /*
-        Reset everything before starting.
-    */
-
-    progressBar.style.width =
-        "0%";
-
-    progressNumber.textContent =
-        "0";
-
-    generationMessage.textContent =
-        generationSteps[0].message;
-
-    generationEncouragement.textContent =
-        generationSteps[0].encouragement;
-
-
-    /*
-        IMPORTANT:
-        Do not calculate a percentage from an invalid
-        step index. Progress is calculated directly from
-        elapsed time and always remains a valid number.
-    */
-
-    const totalDuration =
-        5200 +
-        randomInteger(1200);
-
-
-    const startTime =
-        performance.now();
-
-
-    let lastStep =
-        -1;
-
-
-    function updateGeneration(
-        currentTime
-    ) {
+        if (finished) {
+            return;
+        }
 
         const elapsed =
-            currentTime -
-            startTime;
-
+            Math.max(0, now - startTime);
 
         const rawProgress =
             Math.min(
                 1,
                 Math.max(
                     0,
-                    elapsed /
-                    totalDuration
+                    elapsed / totalDuration
                 )
             );
-
-
-        /*
-            Guaranteed finite number.
-        */
 
         const easedProgress =
             1 -
@@ -1488,554 +940,305 @@ function generateCertificate() {
                 2.6
             );
 
-
         const percentage =
             Math.min(
                 100,
                 Math.max(
                     0,
                     Math.round(
-                        easedProgress *
-                        100
+                        easedProgress * 100
                     )
                 )
             );
 
-
-        progressBar.style.width =
-            `${percentage}%`;
-
-
-        progressNumber.textContent =
-            String(percentage);
-
-
-        /*
-            Calculate the step safely.
-        */
-
-        const stepSize =
-            100 /
-            generationSteps.length;
-
-
-        let stepIndex =
-            Math.floor(
-                percentage /
-                stepSize
-            );
-
-
-        /*
-            At 100%, use the final step.
-        */
-
-        if (
-            percentage >= 100
-        ) {
-
-            stepIndex =
-                generationSteps.length - 1;
-
-        }
-
-
-        stepIndex =
-            Math.max(
-                0,
-                Math.min(
-                    generationSteps.length - 1,
-                    stepIndex
+        const stepIndex =
+            Math.min(
+                generationSteps.length - 1,
+                Math.floor(
+                    (percentage / 100) *
+                    generationSteps.length
                 )
             );
 
-
-        if (
-            stepIndex !==
-            lastStep
-        ) {
-
-            lastStep =
-                stepIndex;
-
-
-            generationMessage.textContent =
-                generationSteps[
-                    stepIndex
-                ].message;
-
-
-            generationEncouragement.textContent =
-                generationSteps[
-                    stepIndex
-                ].encouragement;
-
+        if ($("generationBar")) {
+            $("generationBar").style.width =
+                `${percentage}%`;
         }
 
+        if ($("generationPercent")) {
+            $("generationPercent").textContent =
+                `${percentage}%`;
+        }
 
-        /*
-            Never use NaN as a completion check.
-        */
+        if ($("generationMessage")) {
+            $("generationMessage").textContent =
+                generationSteps[stepIndex];
+        }
 
-        if (
-            rawProgress >= 1
-        ) {
+        if (rawProgress >= 1) {
 
-            progressBar.style.width =
-                "100%";
+            finished = true;
 
-            progressNumber.textContent =
-                "100";
+            if ($("generationBar")) {
+                $("generationBar").style.width =
+                    "100%";
+            }
 
+            if ($("generationPercent")) {
+                $("generationPercent").textContent =
+                    "100%";
+            }
 
-            generationMessage.textContent =
-                "Certificate generation complete.";
+            if ($("generationMessage")) {
+                $("generationMessage").textContent =
+                    "Your certificate is ready to be revealed.";
+            }
 
-            generationEncouragement.textContent =
-                "Your personalized certificate is ready.";
+            setTimeout(() => {
 
+                renderCertificate();
 
-            setTimeout(
-                function () {
-
-                    renderCertificate();
-
-                },
-                650
-            );
-
+            }, 650);
 
             return;
-
         }
 
-
-        requestAnimationFrame(
-            updateGeneration
-        );
-
+        requestAnimationFrame(update);
     }
 
-
-    requestAnimationFrame(
-        updateGeneration
-    );
-
+    requestAnimationFrame(update);
 }
 
 
-/* =========================================================
-   RENDER CERTIFICATE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| RENDER CERTIFICATE
+|--------------------------------------------------------------------------
+*/
 
 function renderCertificate() {
 
-    if (
-        !latestClaimData ||
-        !currentPrize
-    ) {
-
+    if (!userClaimData || !currentPrize) {
         return;
-
     }
-
-
-    const data =
-        latestClaimData;
-
 
     const certificateId =
         generateCertificateId();
 
+    const certificateNumber =
+        `${APP_CONFIG.certificatePrefix}-${Date.now()
+            .toString()
+            .slice(-8)}`;
 
-    const date =
+    $("certificateInstitute").textContent =
+        APP_CONFIG.issuerName;
+
+    $("certificateStatus").textContent =
+        currentPrize.type === "certificate"
+            ? "PROFESSIONAL CERTIFICATE"
+            : "PROFESSIONAL REWARD";
+
+    $("certificateName").textContent =
+        userClaimData.fullName;
+
+    $("certificateTitle").textContent =
+        currentPrize.name;
+
+    $("certificateProgram").textContent =
+        currentPrize.program;
+
+    $("certificateFather").textContent =
+        userClaimData.fatherName;
+
+    $("certificateGraduation").textContent =
+        userClaimData.graduation;
+
+    $("certificateMobile").textContent =
+        userClaimData.mobile;
+
+    $("certificateEmail").textContent =
+        userClaimData.email;
+
+    $("certificateAddress").textContent =
+        userClaimData.address;
+
+    $("certificateDate").textContent =
         getDateString();
 
-
-    document.getElementById(
-        "certificateInstitute"
-    ).textContent =
-        APP_CONFIG.institutionName;
-
-
-    document.getElementById(
-        "certificateStatus"
-    ).textContent =
-        "Certificate of Achievement";
-
-
-    document.getElementById(
-        "certificateTitle"
-    ).textContent =
-        currentPrize.title;
-
-
-    document.getElementById(
-        "certificateName"
-    ).textContent =
-        data.name;
-
-
-    document.getElementById(
-        "certificateProgram"
-    ).textContent =
-        currentPrize.program ||
-        APP_CONFIG.defaultProgramSuffix;
-
-
-    document.getElementById(
-        "certificateFather"
-    ).textContent =
-        data.fatherName;
-
-
-    document.getElementById(
-        "certificateGraduation"
-    ).textContent =
-        data.graduation;
-
-
-    document.getElementById(
-        "certificateMobile"
-    ).textContent =
-        data.mobile;
-
-
-    document.getElementById(
-        "certificateEmail"
-    ).textContent =
-        data.email;
-
-
-    document.getElementById(
-        "certificateAddress"
-    ).textContent =
-        data.address;
-
-
-    document.getElementById(
-        "certificateDate"
-    ).textContent =
-        date;
-
-
-    document.getElementById(
-        "certificateSignatory"
-    ).textContent =
+    $("certificateSignatory").textContent =
         APP_CONFIG.authorizedSignatory;
 
-
-    document.getElementById(
-        "certificateId"
-    ).textContent =
+    $("certificateId").textContent =
         certificateId;
 
+    $("certificateNumber").textContent =
+        certificateNumber;
 
-    document.getElementById(
-        "certificateNumber"
-    ).textContent =
-        certificateId;
+    $("certificateRecipient").textContent =
+        userClaimData.fullName;
 
-
-    document.getElementById(
-        "certificateRecipient"
-    ).textContent =
-        data.name;
-
-
-    /*
-        Re-enable submit button for future edits.
-    */
-
-    document.getElementById(
-        "submitClaimButton"
-    ).disabled =
-        false;
-
-
-    showScreen(
-        "certificate"
-    );
-
+    showScreen(screens.certificate);
 }
 
 
-/* =========================================================
-   RESET GENERATION
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| FORM SUBMISSION
+|--------------------------------------------------------------------------
+*/
 
-function resetGenerationScreen() {
+if (claimForm) {
 
-    document.getElementById(
-        "generationBar"
-    ).style.width =
-        "0%";
+    claimForm.addEventListener(
+        "submit",
+        (event) => {
 
+            event.preventDefault();
 
-    document.getElementById(
-        "generationPercent"
-    ).textContent =
-        "0";
-
-
-    document.getElementById(
-        "generationMessage"
-    ).textContent =
-        generationSteps[0].message;
-
-
-    document.getElementById(
-        "generationEncouragement"
-    ).textContent =
-        generationSteps[0].encouragement;
-
-}
-
-
-/* =========================================================
-   START BUTTON
-========================================================= */
-
-document.getElementById(
-    "startButton"
-)
-.addEventListener(
-    "click",
-    function () {
-
-        showScreen(
-            "spinner"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   SPIN BUTTON
-========================================================= */
-
-spinButton.addEventListener(
-    "click",
-    function () {
-
-        spinWheel();
-
-    }
-);
-
-
-/* =========================================================
-   CLAIM BUTTON
-========================================================= */
-
-document.getElementById(
-    "claimButton"
-)
-.addEventListener(
-    "click",
-    function () {
-
-        if (
-            currentPrize &&
-            currentPrize.type ===
-            "certificate"
-        ) {
-
-            openClaimScreen();
-
-            return;
-
-        }
-
-
-        showScreen(
-            "spinner"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   SPIN AGAIN
-========================================================= */
-
-document.getElementById(
-    "spinAgainButton"
-)
-.addEventListener(
-    "click",
-    function () {
-
-        updateDynamicWheelMessage();
-
-        showScreen(
-            "spinner"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   BACK TO RESULT
-========================================================= */
-
-document.getElementById(
-    "backToResultButton"
-)
-.addEventListener(
-    "click",
-    function () {
-
-        showScreen(
-            "result"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   INPUT VALIDATION
-========================================================= */
-
-document
-    .querySelectorAll(
-        "#claimForm input"
-    )
-    .forEach(
-        function (input) {
-
-            input.addEventListener(
-                "blur",
-                function () {
-
-                    validateField(
-                        this
-                    );
-
-                }
-            );
-
-
-            input.addEventListener(
-                "input",
-                function () {
-
-                    if (
-                        this.value.trim()
-                    ) {
-
-                        validateField(
-                            this
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   CLAIM FORM
-========================================================= */
-
-document.getElementById(
-    "claimForm"
-)
-.addEventListener(
-    "submit",
-    function (event) {
-
-        event.preventDefault();
-
-
-        if (
-            !validateClaimForm()
-        ) {
-
-            const firstInvalid =
-                document.querySelector(
-                    "#claimForm .invalid input"
-                );
-
-
-            if (firstInvalid) {
-
-                firstInvalid.focus();
-
+            if (!validateClaimForm()) {
+                return;
             }
 
+            userClaimData =
+                collectClaimData();
 
-            return;
-
+            generateCertificate();
         }
+    );
+}
 
 
-        const submitButton =
-            document.getElementById(
-                "submitClaimButton"
-            );
+/*
+|--------------------------------------------------------------------------
+| LIVE VALIDATION
+|--------------------------------------------------------------------------
+*/
 
+[
+    "fullName",
+    "fatherName",
+    "mobile",
+    "email",
+    "graduation",
+    "address"
+].forEach((id) => {
 
-        submitButton.disabled =
-            true;
+    const field = $(id);
 
-
-        resetGenerationScreen();
-
-
-        generateCertificate();
-
+    if (!field) {
+        return;
     }
-);
+
+    field.addEventListener(
+        "blur",
+        () => validateField(field)
+    );
+});
 
 
-/* =========================================================
-   EDIT CERTIFICATE
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| BUTTON EVENTS
+|--------------------------------------------------------------------------
+*/
 
-document.getElementById(
-    "editCertificateButton"
-)
-.addEventListener(
-    "click",
-    function () {
+if (startButton) {
 
-        showScreen(
-            "claim"
-        );
+    startButton.addEventListener(
+        "click",
+        () => {
 
-    }
-);
+            currentRound = 1;
 
+            updateDynamicWheelMessage();
 
-/* =========================================================
-   PRINT
-========================================================= */
-
-document.getElementById(
-    "printCertificateButton"
-)
-.addEventListener(
-    "click",
-    function () {
-
-        window.print();
-
-    }
-);
+            showScreen(screens.spinner);
+        }
+    );
+}
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+if (spinButton) {
+
+    spinButton.addEventListener(
+        "click",
+        spinWheel
+    );
+}
+
+
+if (claimButton) {
+
+    claimButton.addEventListener(
+        "click",
+        openClaimScreen
+    );
+}
+
+
+if (spinAgainButton) {
+
+    spinAgainButton.addEventListener(
+        "click",
+        () => {
+
+            updateDynamicWheelMessage();
+
+            showScreen(screens.spinner);
+        }
+    );
+}
+
+
+if (backToResultButton) {
+
+    backToResultButton.addEventListener(
+        "click",
+        () => {
+
+            showScreen(screens.result);
+        }
+    );
+}
+
+
+if (editCertificateButton) {
+
+    editCertificateButton.addEventListener(
+        "click",
+        () => {
+
+            showScreen(screens.claim);
+        }
+    );
+}
+
+
+if (printCertificateButton) {
+
+    printCertificateButton.addEventListener(
+        "click",
+        () => {
+
+            window.print();
+        }
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| INITIALIZATION
+|--------------------------------------------------------------------------
+*/
 
 initializeWheel();
 
 updateDynamicWheelMessage();
+
+rotateWelcomeMessage();
+
+setInterval(
+    rotateWelcomeMessage,
+    4000
+);
